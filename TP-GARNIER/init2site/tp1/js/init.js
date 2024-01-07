@@ -13,7 +13,7 @@ function init() {
   lumiere(scene);
 
   var axes = new THREE.AxesHelper(1);
-  scene.add(axes);
+  createAxes(scene);
 
   //********************************************************
   //
@@ -76,9 +76,12 @@ function createVector(scene, A, B, hexColor, coneLength, coneRadius) {
   scene.add(arrow);
 }
 
-
-function repere(Scene){
-  vecteur(Scene, new THREE.Vector3(0,0,0), new THREE.Vector3(1,0,0), 0xFF0000, 0.1, 0.05);
-  vecteur(Scene, new THREE.Vector3(0,0,0), new THREE.Vector3(0,1,0), 0x00FF00, 0.1, 0.05);
-  vecteur(Scene, new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,1), 0x0000FF, 0.1, 0.05);
+/**
+ * Creates three vectors representing the three axes of the scene.
+ * @param {Scene} scene  - The scene in which the vectors will be created.
+ */
+function createAxes(scene) {
+  createVector(scene, new THREE.Vector3(0,0,0), new THREE.Vector3(1,0,0), 0xFF0000, 0.1, 0.05);
+  createVector(scene, new THREE.Vector3(0,0,0), new THREE.Vector3(0,1,0), 0x00FF00, 0.1, 0.05);
+  createVector(scene, new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,1), 0x0000FF, 0.1, 0.05);
 }
