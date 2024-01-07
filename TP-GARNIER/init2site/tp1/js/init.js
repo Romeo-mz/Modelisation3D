@@ -32,7 +32,27 @@ function init() {
   //  G U I     M E N U     P A R T
   //
   //********************************************************
-
+  const gui = new dat.GUI();
+  let menuGUI = gui.addFolder('Menu');
+  
+  let cameraControls = {
+    cameraxPos: camera.position.x,
+    camerayPos: camera.position.y,
+    camerazPos: camera.position.z
+  };
+  
+  menuGUI.add(cameraControls, 'cameraxPos', -10, 10).onChange(function () {
+    camera.position.x = cameraControls.cameraxPos;
+    reRender();
+  });
+  menuGUI.add(cameraControls, 'camerayPos', -10, 10).onChange(function () {
+    camera.position.y = cameraControls.camerayPos;
+    reRender();
+  });
+  menuGUI.add(cameraControls, 'camerazPos', -10, 10).onChange(function () {
+    camera.position.z = cameraControls.camerazPos;
+    reRender();
+  });
   //********************************************************
   //
   //  E N D     G U I     M E N U     P A R T
