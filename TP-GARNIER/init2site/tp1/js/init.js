@@ -14,12 +14,25 @@ function init() {
 
   var axes = new THREE.AxesHelper(1);
   createAxes(scene);
-
+  createVectOrth(scene);
   //********************************************************
   //
   //  G E O M E T R Y     P A R T
   //
   //********************************************************
+  
+  function createVectOrth(scene){
+    let u = new THREE.Vector3(-7, 4, -4);
+    let v = new THREE.Vector3(4, 8, 7);
+    let w = new THREE.Vector3(7, -3, -8);
+    
+    let orgine = new THREE.Vector3(0, 0, 0);
+
+    createVector(scene, orgine, u, 0x000000, 0.1, 0.05);
+    createVector(scene, orgine, v, 0x000000, 0.1, 0.05);
+    createVector(scene, orgine, w, 0x000000, 0.1, 0.05);
+  }
+
 
   //********************************************************
   //
@@ -33,7 +46,7 @@ function init() {
   //
   //********************************************************
   const gui = new dat.GUI();
-  let menuGUI = gui.addFolder('Menu');
+  let cameraPosGui = gui.addFolder('Camera Position');
   
   let cameraControls = {
     cameraxPos: camera.position.x,
@@ -41,18 +54,46 @@ function init() {
     camerazPos: camera.position.z
   };
   
-  menuGUI.add(cameraControls, 'cameraxPos', -10, 10).onChange(function () {
+  cameraPosGui.add(cameraControls, 'cameraxPos', -10, 10).onChange(function () {
     camera.position.x = cameraControls.cameraxPos;
     reRender();
   });
-  menuGUI.add(cameraControls, 'camerayPos', -10, 10).onChange(function () {
+  cameraPosGui.add(cameraControls, 'camerayPos', -10, 10).onChange(function () {
     camera.position.y = cameraControls.camerayPos;
     reRender();
   });
-  menuGUI.add(cameraControls, 'camerazPos', -10, 10).onChange(function () {
+  cameraPosGui.add(cameraControls, 'camerazPos', -10, 10).onChange(function () {
     camera.position.z = cameraControls.camerazPos;
     reRender();
   });
+
+  
+let cameraDirGui = gui.addFolder('Camera Direction');
+
+let cameraDirControls = {
+  cameraDirxPos: xDir,
+  cameraDiryPos: yDir,
+  cameraDirzPos: zDir
+};
+
+cameraDirGui.add(cameraDirControls, 'cameraDirxPos', -10, 10).onChange(function () {
+  xDir = cameraDirControls.cameraDirxPos;
+  camera.lookAt(xDir, yDir, zDir);
+  reRender();
+}
+);
+cameraDirGui.add(cameraDirControls, 'cameraDiryPos', -10, 10).onChange(function () {
+  yDir = cameraDirControls.cameraDiryPos;
+  camera.lookAt(xDir, yDir, zDir);
+  reRender();
+}
+);
+cameraDirGui.add(cameraDirControls, 'cameraDirzPos', -10, 10).onChange(function () {
+  zDir = cameraDirControls.cameraDirzPos;
+  camera.lookAt(xDir, yDir, zDir);
+  reRender();
+}
+);
   //********************************************************
   //
   //  E N D     G U I     M E N U     P A R T
