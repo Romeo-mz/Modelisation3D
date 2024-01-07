@@ -12,7 +12,6 @@ function init() {
   cameraLumiere(scene, camera);
   lumiere(scene);
 
-  var axes = new THREE.AxesHelper(1);
   createAxes(scene);
   createVectOrth(scene);
   //********************************************************
@@ -26,12 +25,27 @@ function init() {
     let v = new THREE.Vector3(4, 8, 7);
     let w = new THREE.Vector3(7, -3, -8);
     
-    let orgine = new THREE.Vector3(0, 0, 0);
+    let origin = new THREE.Vector3(0, 0, 0);
 
-    createVector(scene, orgine, u, 0x000000, 0.1, 0.05);
-    createVector(scene, orgine, v, 0x000000, 0.1, 0.05);
-    createVector(scene, orgine, w, 0x000000, 0.1, 0.05);
-  }
+    createVector(scene, origin, u, 0x000000, 0.1, 0.05);
+    createVector(scene, origin, v, 0x000000, 0.1, 0.05);
+
+    let crossVect = crossVector(u, v);
+
+    // Création d'une flèche pour représenter le vecteur croisé
+    let crossArrow = new THREE.ArrowHelper(crossVect.normalize(), origin, crossVect.length(), 0xff3300, 0.2, 0.1);
+
+    // Ajout de la flèche à la scène
+    scene.add(crossArrow);
+}
+
+function crossVector(vect1, vect2){
+    let cross = new THREE.Vector3();
+    cross.crossVectors(vect1, vect2);
+    return cross;
+}
+
+
 
 
   //********************************************************
