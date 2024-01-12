@@ -1,8 +1,9 @@
+// table.js
 // Function to create and display the table
 
-export function createTable() {
-    const tableGeometry = new THREE.BoxGeometry(100, 10, 50);
-    const tableMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+export function createTable(scene) {
+    const tableGeometry = new THREE.BoxGeometry(10, 10, 10);
+    const tableMaterial = new THREE.MeshStandardMaterial({ color: 0xaaffaa });
     const table = new THREE.Mesh(tableGeometry, tableMaterial);
 
     return table;
