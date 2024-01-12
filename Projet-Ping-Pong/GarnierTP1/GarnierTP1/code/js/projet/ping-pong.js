@@ -11,11 +11,21 @@ export function init() {
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
     const renderer = new THREE.WebGLRenderer();
 
-    cameraLumiere(scene,camera);
-    lumiere(scene);
+   
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const table = createTable();
     scene.add(table);
+
+    document.body.appendChild(renderer.domElement);
+
+    let rotationAngle = 0;
+
+    // Your animation/rendering loop here
+    function animate() {
+
+        renderer.render(scene, camera);
+    }
+    animate();
 }

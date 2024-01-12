@@ -5,7 +5,7 @@ export function createTable() {
     const tableMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
     const table = new THREE.Mesh(tableGeometry, tableMaterial);
 
-    
+    return table;
 }
 
 function createNet() {
