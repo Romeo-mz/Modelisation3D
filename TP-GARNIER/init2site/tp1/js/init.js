@@ -1,5 +1,3 @@
-
-
 function init() {
   var stats = initStats();
   let renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -13,7 +11,10 @@ function init() {
   lumiere(scene);
 
   createAxes(scene);
-  createVectOrth(scene);
+  // createVectOrth(scene);
+  
+  let sphere = createSphere(scene, 1, 20, 0.5, 0x0000FF);
+  scene.add(sphere);
   //********************************************************
   //
   //  G E O M E T R Y     P A R T
@@ -45,6 +46,12 @@ function crossVector(vect1, vect2){
     return cross;
 }
 
+function createSphere(scene, r, n, oppacity, color){
+    const geometry = new THREE.SphereGeometry(r, n, n);
+    const material = new THREE.MeshPhongMaterial({color: color, oppacity: oppacity })
+    const sphere = new THREE.Mesh(geometry, material);
+    return sphere;
+}
 
 
 
