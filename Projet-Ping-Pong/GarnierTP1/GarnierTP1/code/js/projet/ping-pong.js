@@ -42,4 +42,6 @@ function init() {
     animate(); // Start the animation loop
 }
 
-window.init = init;
+document.addEventListener('DOMContentLoaded', function () {
+    init();
+});
