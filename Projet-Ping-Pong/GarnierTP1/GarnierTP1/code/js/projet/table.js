@@ -1,26 +1,31 @@
 // table.js
 // Function to create and display the table
+const length = 20;
+const width = 10;
+const depth = 2;
 
-export function createTable(scene) {
-    const tableGeometry = new THREE.BoxGeometry(10, 10, 10);
-    const tableMaterial = new THREE.MeshStandardMaterial({ color: 0xaaffaa });
-    const table = new THREE.Mesh(tableGeometry, tableMaterial);
+class Table{
+    constructor(scene){
+        this.scene = scene;
+    }
 
-    return table;
+    render(){
+        const geometry = new THREE.PlaneGeometry(length, width);
+        const material = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+        const plane = new THREE.Mesh(geometry, material);
+
+        // plane.position.set(0, 0, 0);
+        // Rotate the plane so it's horizontal
+        plane.rotation.x = Math.PI / 2;
+        this.scene.add(plane);
+
+        const field = [];
+
+        const fieldMaterial = new THREE.MeshPhongMaterial({ color: 0xc1f7b9, side: THREE.DoubleSide });
+
+
+    }
+
 }
 
-function createNet() {
-
-}
-
-function createLegs() {
-
-}
-
-function createFeet() { 
-
-}
-
-function drawWhiteLines() {
-
-}
+window.Table = Table;
