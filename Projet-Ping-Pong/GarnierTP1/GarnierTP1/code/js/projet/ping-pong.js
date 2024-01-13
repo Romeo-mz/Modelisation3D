@@ -11,19 +11,21 @@ function init() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setClearColor(0xffffff);
+    renderer.setClearColor(0xFFE4E1);
 
-    const light = new THREE.AmbientLight(0x404040);
+    const light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
 
-    camera.position.set(0, 0, 100);
+    camera.position.set(20, 10, -10);
     camera.lookAt(0, 0, 0);
 
     // Create the table
     const tableInstance = new window.Table(scene);
-    console.log(tableInstance);
     tableInstance.render();
-
+    
+    // Create the net
+    const netInstance = new window.Net(scene, tableInstance);
+    netInstance.render();
 
     // Set camera position
 
