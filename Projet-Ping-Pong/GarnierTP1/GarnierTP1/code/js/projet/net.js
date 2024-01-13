@@ -39,14 +39,14 @@ class Net {
         const wireVerticalGeometry = new THREE.BoxGeometry(0.1, depth - 0.3, 0.1);
         const wireVerticalMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
-        for (let i = 0; i < numberOfWires * 4; i++) {
+        for (let i = 0; i < numberOfWires * 8; i++) {
             const wireVertical = new THREE.Mesh(wireVerticalGeometry, wireVerticalMaterial);
 
             // Positionner chaque fil en fonction de la longueur du filet
 
             wireVertical.position.x = 0;
             wireVertical.position.y = depth / 2;
-            wireVertical.position.z = (this.table.width - 0.1) / (numberOfWires * 4 - 1) * i - (this.table.width / 2);
+            wireVertical.position.z = (this.table.width - 0.1) / (numberOfWires * 8 - 1) * i - (this.table.width / 2);
             this.scene.add(wireVertical);
         }
 
