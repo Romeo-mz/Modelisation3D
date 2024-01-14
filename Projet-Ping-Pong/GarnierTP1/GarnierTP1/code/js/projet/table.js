@@ -64,6 +64,7 @@ class Table{
             console.log(leg);
         });
 
+       
     }
 
 }
