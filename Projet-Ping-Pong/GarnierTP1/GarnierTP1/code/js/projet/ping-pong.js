@@ -27,6 +27,10 @@ function init() {
     const netInstance = new window.Net(scene, tableInstance);
     netInstance.render();
 
+    // Create the racket
+    const racketInstance1 = new window.Racket(scene, tableInstance);
+    racketInstance1.render();
+
     // Set camera position
 
     // Your animation/rendering loop here
