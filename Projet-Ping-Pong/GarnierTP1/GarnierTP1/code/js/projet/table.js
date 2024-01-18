@@ -10,9 +10,13 @@ class Table{
         this.length = length;
         this.width = width;
     }
-
+    setLength(length){
+        this.length = length;
+        console.log(this.length);
+    }
     render(){
-        const geometry = new THREE.BoxGeometry(length,  width, height);
+
+        const geometry = new THREE.BoxGeometry(this.length,  this.width,this.height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
 
@@ -62,12 +66,15 @@ class Table{
 
         legs.forEach((leg) => {
             leg.render();
-            console.log(leg);
         });
 
        
     }
-
+    dispose() {
+        this.scene.remove(this.mesh); // Assuming you have a mesh property in your Table class
+        this.mesh.geometry.dispose();
+        this.mesh.material.dispose();
+    }
 }
 
 window.Table = Table;

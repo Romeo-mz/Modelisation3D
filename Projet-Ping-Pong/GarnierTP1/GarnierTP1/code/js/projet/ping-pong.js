@@ -33,6 +33,16 @@ function init() {
 
     // Set camera position
 
+    // Create the gui
+    const guiInstance = new window.Gui();
+    const tableFolder = guiInstance.addFolder('Table');
+    tableFolder.add(tableInstance, 'length', 10, 50).onChange((value) => { 
+        tableInstance.setLength(value); 
+        tableInstance.render(); 
+        renderer.render(scene, camera);
+    });
+
+    
     // Your animation/rendering loop here
     function animate() {
         requestAnimationFrame(animate);
