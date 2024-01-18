@@ -31,6 +31,10 @@ function init() {
     const racketInstance1 = new window.Racket(scene, tableInstance);
     racketInstance1.render();
 
+    // Create the ball
+    const ballInstance = new TableTennisBall(scene, tableInstance);
+    ballInstance.render();
+
     // Set camera position
 
     // Your animation/rendering loop here
