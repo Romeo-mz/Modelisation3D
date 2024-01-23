@@ -9,14 +9,18 @@ class Table{
         this.scene = scene;
         this.length = length;
         this.width = width;
+        this.tableMesh = null;
     }
     setLength(length){
         this.length = length;
+        this.dispose();
+        this.render(); 
+
         console.log(this.length);
     }
     render(){
 
-        const geometry = new THREE.BoxGeometry(this.length,  this.width,this.height);
+        const geometry = new THREE.BoxGeometry(this.length,  width, height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
 
@@ -24,6 +28,7 @@ class Table{
         // Rotate the plane so it's horizontal
         plane.rotation.x = Math.PI / 2;
         this.scene.add(plane);
+        this.tableMesh = plane;
 
         const field = [];
 
@@ -67,14 +72,17 @@ class Table{
         legs.forEach((leg) => {
             leg.render();
         });
+    }
 
-       
-    }
     dispose() {
-        this.scene.remove(this.mesh); // Assuming you have a mesh property in your Table class
-        this.mesh.geometry.dispose();
-        this.mesh.material.dispose();
+        if (this.tableMesh) {
+            this.scene.remove(this.tableMesh);
+            this.tableMesh.geometry.dispose();
+            this.tableMesh.material.dispose();
+            this.tableMesh = null;
+        }
     }
+    
 }
 
 window.Table = Table;

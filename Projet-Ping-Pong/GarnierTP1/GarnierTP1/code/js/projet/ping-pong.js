@@ -38,7 +38,7 @@ function init() {
     const tableFolder = guiInstance.addFolder('Table');
     tableFolder.add(tableInstance, 'length', 10, 50).onChange((value) => { 
         tableInstance.setLength(value); 
-        tableInstance.render(); 
+        
         renderer.render(scene, camera);
     });
 
