@@ -41,8 +41,13 @@ function init() {
         
         renderer.render(scene, camera);
     });
-    tableFolder.addFolder('Lathe controls');
-        
+    
+    const latheFolder = guiInstance.addFolder('Lathe controls');
+    latheFolder.add(tableInstance, 'height', 1, 20).step(1).onChange((value) => {
+        tableInstance.setHeights(value);
+        renderer.render(scene, camera);
+    });
+
     // Your animation/rendering loop here
     function animate() {
         requestAnimationFrame(animate);

@@ -10,6 +10,7 @@ class Table{
         this.length = length;
         this.width = width;
         this.tableMesh = null;
+        this.height = height;
     }
     setLength(length){
         this.length = length;
@@ -42,8 +43,6 @@ class Table{
         const lowerLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), lowerLeftMaterial);
         const lowerRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), lowerRightMaterial);
 
-        this.tableMesh.add(upperLeftEdge, upperRightEdge, lowerLeftEdge, lowerRightEdge);
-
         
         upperLeftEdge.position.set(this.length / 4, height, -(width / 4));
         upperRightEdge.position.set(this.length / 4, height, width / 4);
@@ -75,6 +74,12 @@ class Table{
         legs.forEach((leg) => {
             leg.render();
         });
+    }
+
+    setHeights(height){
+        this.dispose();
+        this.window.TableLeg.height = height;
+        this.render();
     }
 
     dispose() {
