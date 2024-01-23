@@ -7,6 +7,7 @@ class Gui {
 
     reset() {
         console.log('reset')
+        window.location.reload();
     }
 
     addFolder(name) {

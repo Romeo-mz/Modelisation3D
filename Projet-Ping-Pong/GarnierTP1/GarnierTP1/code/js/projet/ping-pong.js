@@ -41,8 +41,8 @@ function init() {
         
         renderer.render(scene, camera);
     });
-
-    
+    tableFolder.addFolder('Lathe controls');
+        
     // Your animation/rendering loop here
     function animate() {
         requestAnimationFrame(animate);

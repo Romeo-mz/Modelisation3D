@@ -37,15 +37,18 @@ class Table{
         const lowerLeftMaterial = new THREE.MeshPhongMaterial({ color: 0xf7f7b9, side: THREE.DoubleSide }); // green
         const lowerRightMaterial = new THREE.MeshPhongMaterial({ color: 0xc1f7b9, side: THREE.DoubleSide }); // blue
 
-        const upperLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), upperLeftMaterial);
-        const upperRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), upperRightMaterial);
-        const lowerLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), lowerLeftMaterial);
-        const lowerRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), lowerRightMaterial);
+        const upperLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), upperLeftMaterial);
+        const upperRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), upperRightMaterial);
+        const lowerLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), lowerLeftMaterial);
+        const lowerRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((this.length / 2) - 1, (width / 2) - 0.5), lowerRightMaterial);
 
-        upperLeftEdge.position.set(length / 4, height, -(width / 4));
-        upperRightEdge.position.set(length / 4, height, width / 4);
-        lowerLeftEdge.position.set(-(length / 4), height, -(width / 4));
-        lowerRightEdge.position.set(-(length / 4), height, width / 4);
+        this.tableMesh.add(upperLeftEdge, upperRightEdge, lowerLeftEdge, lowerRightEdge);
+
+        
+        upperLeftEdge.position.set(this.length / 4, height, -(width / 4));
+        upperRightEdge.position.set(this.length / 4, height, width / 4);
+        lowerLeftEdge.position.set(-(this.length / 4), height, -(width / 4));
+        lowerRightEdge.position.set(-(this.length / 4), height, width / 4);
 
         field.push(upperLeftEdge, upperRightEdge, lowerLeftEdge, lowerRightEdge);
 
