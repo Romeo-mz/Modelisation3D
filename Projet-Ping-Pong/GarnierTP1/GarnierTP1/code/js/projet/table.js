@@ -57,12 +57,16 @@ class Table{
         })
 
         // Create the legs
+        this.setLegs(this.length, this.height, this.width)
+    }
+
+    setLegs(length, height, width){
         const legs = [];
 
-        const legUpperLeft = new window.TableLeg(this.scene, this);
-        const legUpperRight = new window.TableLeg(this.scene, this);
-        const legLowerLeft = new window.TableLeg(this.scene, this);
-        const legLowerRight = new window.TableLeg(this.scene, this);
+        const legUpperLeft = new window.TableLeg(this.scene, this, height);
+        const legUpperRight = new window.TableLeg(this.scene, this, height);
+        const legLowerLeft = new window.TableLeg(this.scene, this, height);
+        const legLowerRight = new window.TableLeg(this.scene, this, height);
 
         legUpperLeft.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
         legUpperRight.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, width / 2 - 0.5);
@@ -76,10 +80,9 @@ class Table{
         });
     }
 
-    setHeights(height){
-        this.dispose();
-        this.window.TableLeg.height = height;
-        this.render();
+    setHeights(height) {
+        this.setLegs(this.length, height, this.width)
+        this.dispose()
     }
 
     dispose() {

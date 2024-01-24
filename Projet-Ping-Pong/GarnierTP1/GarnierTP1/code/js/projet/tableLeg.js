@@ -1,9 +1,9 @@
 class TableLeg {
-    constructor(scene, table) {
+    constructor(scene, table, height = this.table.width / 3) {
         this.scene = scene;
         this.table = table;
         this.position = new THREE.Vector3();
-        this.height = this.table.width / 3;
+        this.height = height;//this.table.width / 3;
     }
 
     render() {
@@ -11,7 +11,7 @@ class TableLeg {
         const pointsFirstLathe = [
             new THREE.Vector2(0.2, 0),
             new THREE.Vector2(0.3, this.height / 4),
-            new THREE.Vector2(0.1, this.height / 2)
+            new THREE.Vector2(0.1, this.height / 2),
         ];
 
         const pointsSecondLathe = [
@@ -19,7 +19,8 @@ class TableLeg {
             new THREE.Vector2(0.5, this.height / 4),
             new THREE.Vector2(0.1,  -(this.height) / 2)
         ];
-        
+        console.log("new table height" + this.height)
+
         // Create the first lathe geometry
         const legGeometryFirstLathe = new THREE.LatheGeometry(pointsFirstLathe);
 

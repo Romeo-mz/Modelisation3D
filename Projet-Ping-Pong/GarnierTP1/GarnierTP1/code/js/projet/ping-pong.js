@@ -36,7 +36,7 @@ function init() {
     // Create the gui
     const guiInstance = new window.Gui();
     const tableFolder = guiInstance.addFolder('Table');
-    tableFolder.add(tableInstance, 'length', 10, 50).onChange((value) => { 
+    tableFolder.add(tableInstance, 'length', 10, 50).step(1).onChange((value) => { 
         tableInstance.setLength(value); 
         
         renderer.render(scene, camera);
