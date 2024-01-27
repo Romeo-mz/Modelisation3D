@@ -6,6 +6,10 @@ class TableLeg {
         this.table = table;
         this.position = new THREE.Vector3();
         this.height = height;//this.table.width / 3;
+
+        this.mesh = null;
+
+
         this.pointsFirstLathe = [
             new THREE.Vector2(0.2, 0), // Bottom of the leg
             new THREE.Vector2(0.3, this.height / 4), // Start of the taper
@@ -13,7 +17,7 @@ class TableLeg {
         ];
         
         this.pointsSecondLathe = [
-            new THREE.Vector2(0.1, this.height), // Top of the leg
+            new THREE.Vector2(0.1, -this.height), // Top of the leg
             new THREE.Vector2(0.5, this.height / 4), // Middle of the leg
             new THREE.Vector2(0.1, -(this.height) / 2), // Start of the taper
         ];
@@ -35,7 +39,6 @@ class TableLeg {
         // ];
 
         // Create the first lathe geometry
-        console.log(this.pointsFirstLathe);
         const legGeometryFirstLathe = new THREE.LatheGeometry(this.pointsFirstLathe);
 
         // Create the second lathe geometry
@@ -48,24 +51,22 @@ class TableLeg {
 
         // Create the material and mesh for the leg
         const legMaterial = new THREE.MeshBasicMaterial({ color: 0x007879 });
-        const leg = new THREE.Mesh(legGeometry, legMaterial);
-
+        this.mesh = new THREE.Mesh(legGeometry, legMaterial);
+        
         // Position the leg
-        leg.position.set(this.position.x, this.position.y - 0.01, this.position.z);
+        this.mesh.position.set(this.position.x, this.position.y - 0.01, this.position.z);
 
         // Add the leg to the scene
-        this.scene.add(leg);
+        this.scene.add(this.mesh);
         this.createFeet();
     }
 
     setControlPointsFirst(points) {
-        console.log(points);
         this.pointsFirstLathe = points;
         this.dispose();
         this.render();
     }
     setControlPointsSecond(points) {
-        console.log(points);
         this.pointsSecondLathe = points;
         this.dispose();
         this.render();
@@ -88,12 +89,31 @@ class TableLeg {
     }
     dispose() {
         if (this.mesh) {
+            console.log('dispose');
             this.scene.remove(this.mesh);
-            this.mesh.geometry.dispose();
-            this.mesh.material.dispose();
+    
+            // Dispose of legGeometry
+            if (this.mesh.geometry) {
+                console.log('dispose geometry');
+                this.mesh.geometry.dispose();
+            }
+    
+            // Dispose of legMaterial
+            if (this.mesh.material) {
+                console.log('dispose material');
+                // Check if the material has a dispose method before calling it
+                if (this.mesh.material.dispose) {
+                    this.mesh.material.dispose();
+                }
+            }
+    
             this.mesh = null;
+
         }
     }
+    
+    
+    
 }
 
 window.TableLeg = TableLeg;
