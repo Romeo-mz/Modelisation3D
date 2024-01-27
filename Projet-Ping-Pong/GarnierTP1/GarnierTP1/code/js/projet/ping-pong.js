@@ -48,8 +48,8 @@ function setupLatheControls(guiInstance, tableInstance) {
 
     const setupLatheFolder = (folder, points, setControlPointsFunction) => {
         points.forEach((point, index) => {
-            folder.add(point, 'x', -1, 1).step(0.1).onChange(() => setControlPointsFunction(index, points));
-            folder.add(point, 'y', -1, 1).step(0.1).onChange(() => setControlPointsFunction(index, points));
+            folder.add(point, 'x', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
+            folder.add(point, 'y', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
         });
     };
 
