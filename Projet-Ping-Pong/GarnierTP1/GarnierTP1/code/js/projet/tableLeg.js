@@ -1,3 +1,5 @@
+//tableLeg.js
+
 class TableLeg {
     constructor(scene, table, height = this.table.width / 3) {
         this.scene = scene;
@@ -5,27 +7,23 @@ class TableLeg {
         this.position = new THREE.Vector3();
         this.height = height;//this.table.width / 3;
     }
+    pointsFirstLathe = [new THREE.Vector2(0.2, 0),
+        new THREE.Vector2(0.3, this.height / 4),
+        new THREE.Vector2(0.1, this.height / 2),
+    ];
 
+    pointsSecondLathe = [
+        new THREE.Vector2(0.1, this.height / 2),
+        new THREE.Vector2(0.5, this.height / 4),
+        new THREE.Vector2(0.1, -(this.height) / 2)
+    ];
     render() {
-        // Define the points for the lathe geometry
-        const pointsFirstLathe = [
-            new THREE.Vector2(0.2, 0),
-            new THREE.Vector2(0.3, this.height / 4),
-            new THREE.Vector2(0.1, this.height / 2),
-        ];
-
-        const pointsSecondLathe = [
-            new THREE.Vector2(0.1, this.height/2),
-            new THREE.Vector2(0.5, this.height / 4),
-            new THREE.Vector2(0.1,  -(this.height) / 2)
-        ];
-        console.log("new table height" + this.height)
 
         // Create the first lathe geometry
-        const legGeometryFirstLathe = new THREE.LatheGeometry(pointsFirstLathe);
+        const legGeometryFirstLathe = new THREE.LatheGeometry(this.pointsFirstLathe);
 
         // Create the second lathe geometry
-        const legGeometrySecondLathe = new THREE.LatheGeometry(pointsSecondLathe);
+        const legGeometrySecondLathe = new THREE.LatheGeometry(this.pointsSecondLathe);
 
         // Merge the two lathe geometries
         const legGeometry = new THREE.Geometry();

@@ -33,20 +33,37 @@ function init() {
 
     // Set camera position
 
-    // Create the gui
-    const guiInstance = new window.Gui();
-    const tableFolder = guiInstance.addFolder('Table');
-    tableFolder.add(tableInstance, 'length', 10, 50).step(1).onChange((value) => { 
-        tableInstance.setLength(value); 
-        
-        renderer.render(scene, camera);
-    });
-    
-    const latheFolder = guiInstance.addFolder('Lathe controls');
-    latheFolder.add(tableInstance, 'height', 1, 20).step(1).onChange((value) => {
-        tableInstance.setHeights(value);
-        renderer.render(scene, camera);
-    });
+   // Create the gui
+   const guiInstance = new window.Gui();
+
+   // Create a folder for controlling the lathe points
+   const latheFolder = guiInstance.addFolder('Lathe Controls');
+   
+   // Add controls for the first lathe control points
+   const pointsFirstLathe = tableInstance.legs[0].pointsFirstLathe;
+
+   pointsFirstLathe.forEach((point, index) => {
+        console.log(point)
+        latheFolder.add(point, 'x', -10, 10).name(`Point  X First Lathe`);
+        latheFolder.add(point, 'y', -10, 10).name(`Point  Y First Lathe`);
+   });
+
+   // Add controls for the second lathe control points
+   const pointsSecondLathe = tableInstance.legs[0].pointsSecondLathe;
+   pointsSecondLathe.forEach((point, index) => {
+        latheFolder.add(point, 'x', -10, 10).name(`Point X Second Lathe`);
+        latheFolder.add(point, 'y', -10, 10).name(`Point Y Second Lathe`);
+   });
+
+   // Add a folder for the light properties
+   const lightFolder = guiInstance.addFolder('Light Properties');
+
+   // Add controls for the light properties
+   lightFolder.add(tableInstance, 'setLightProperties', 0, 1).name('Light Intensity');
+   lightFolder.addColor(tableInstance.light, 'color').onChange(function (value) {
+       tableInstance.light.color.set(value);
+   });
+
 
     // Your animation/rendering loop here
     function animate() {
@@ -62,7 +79,3 @@ function init() {
 
     animate(); // Start the animation loop
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    init();
-});

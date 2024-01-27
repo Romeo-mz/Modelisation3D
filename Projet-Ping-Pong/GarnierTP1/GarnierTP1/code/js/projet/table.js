@@ -10,14 +10,19 @@ class Table{
         this.length = length;
         this.width = width;
         this.tableMesh = null;
+        this.legMesh = null;
         this.height = height;
+
+        // Initialize legs array
+        this.legs = [new window.TableLeg(scene, this, height)];
+
+        // Initialize light
+        this.light = new THREE.AmbientLight(0xffffff);
     }
     setLength(length){
         this.length = length;
         this.dispose();
         this.render(); 
-
-        console.log(this.length);
     }
     render(){
 
@@ -50,7 +55,7 @@ class Table{
         lowerRightEdge.position.set(-(this.length / 4), height, width / 4);
 
         field.push(upperLeftEdge, upperRightEdge, lowerLeftEdge, lowerRightEdge);
-
+        
         field.forEach((edge) => {
             edge.rotation.x = Math.PI / 2;
             this.scene.add(edge);
@@ -73,16 +78,31 @@ class Table{
         legLowerLeft.position.set(-(length / 2) + 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
         legLowerRight.position.set(-(length / 2) + 0.5, -legUpperLeft.height / 2, width / 2 - 0.5);
         
-        legs.push(legUpperLeft, legUpperRight, legLowerLeft, legLowerRight);
-
-        legs.forEach((leg) => {
+        this.legMesh = [legUpperLeft, legUpperRight, legLowerLeft, legLowerRight];
+        this.legMesh.forEach((leg) => {
             leg.render();
         });
     }
 
     setHeights(height) {
-        this.setLegs(this.length, height, this.width)
         this.dispose()
+
+        this.setLegs(this.length, height, this.width)
+    }
+
+    setLatheControlPoints(latheIndex, points) {
+        if (this.legs && this.legs[latheIndex]) {
+            this.legs[latheIndex].setControlPoints(points);
+            this.dispose();
+            this.render();
+        }
+    }
+
+    setLightProperties(intensity, color) {
+        this.scene.remove(this.light);
+        this.light = new THREE.AmbientLight(0xffffff, intensity);
+        this.light.color.set(color);
+        this.scene.add(this.light);
     }
 
     dispose() {
@@ -91,6 +111,13 @@ class Table{
             this.tableMesh.geometry.dispose();
             this.tableMesh.material.dispose();
             this.tableMesh = null;
+        }
+
+        if (this.legMesh) {
+            this.legMesh.forEach((leg) => {
+                this.scene.remove(leg.mesh);
+            });
+            this.legMesh = null;
         }
     }
     
