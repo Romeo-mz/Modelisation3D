@@ -204,55 +204,61 @@ function init() {
     {
         otherSide = Math.floor(Math.random() * tableWidth/2);
         debut = lastVector.getPointAt(1).z;
+        
 
-        pente = (3*tableLength)/(4*(Math.abs(debut+otherSide+0.01)));
+        pente = (3*tableLength)/(4*((-debut+otherSide+0.01)));
 
         
-        origine = tableLength/2 + pente*(-debut);
+        if (otherSide < Math.abs(debut) && debut>0)
+        {
+            pente = -pente
+        }
 
-        controlPoint1 = (tableLength/4 - origine)/pente;
+        
+        origine = (-tableLength/2) - (pente*(debut));
 
-        middlePoint = (origine)/pente;
+        
 
-        controlPoint2 = (-tableLength/12 - origine)/pente;
-        controlPoint3 = (-tableLength/6 - origine)/pente;
+        controlPoint1 = (-tableLength/4 - origine)/pente;
 
-        jointWidth = (-tableLength/4 - origine)/pente;
+        middlePoint = -(origine)/pente;
 
-        controlPoint4 = (-3*tableLength/8 - origine)/pente;
+        
 
-        endWidth = (-tableLength/2 - origine)/pente;
+        controlPoint2 = (tableLength/12 - origine)/pente;
+        controlPoint3 = (tableLength/6 - origine)/pente;
+
+        jointWidth = (tableLength/4 - origine)/pente;
+
+        controlPoint4 = (3*tableLength/8 - origine)/pente;
+
+        endWidth = (tableLength/2 - origine)/pente;
 
 
 
         a = new THREE.QuadraticBezierCurve3(
-            lastVector.getPointAt(1),
+            lastVector.getPointAt(1),            
             new THREE.Vector3(-tableLength/4, racketPosY, controlPoint1),
             new THREE.Vector3(0, 3*racketPosY/4, middlePoint));
 
         b = new THREE.CubicBezierCurve3(
             new THREE.Vector3(0, 3*racketPosY/4, middlePoint),
-            new THREE.Vector3(0, 3*racketPosY/4,-controlPoint2),
-            new THREE.Vector3(tableLength/8, racketPosY/2, -controlPoint3),
+            new THREE.Vector3(0, 3*racketPosY/4,controlPoint2),
+            new THREE.Vector3(tableLength/8, racketPosY/2, controlPoint3),
             new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,otherSide));
             
 
         c = new THREE.QuadraticBezierCurve3(
             new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,otherSide),
-            new THREE.Vector3(3*(tableLength/8), racketPosY, -controlPoint4),
-            new THREE.Vector3(((tableLength/2) +racketPosX - racketThick - ballRadius/2), racketPosY,-endWidth));
+            new THREE.Vector3(3*(tableLength/8), racketPosY, controlPoint4),
+            new THREE.Vector3(((tableLength/2) +racketPosX - racketThick - ballRadius/2), racketPosY,endWidth));
 
         const combinedCurve = new THREE.CurvePath();
         combinedCurve.add(a);
         combinedCurve.add(b);
         combinedCurve.add(c);
         
-        console.log(controlPoint1);
-        console.log(controlPoint2);
-
-        console.log(controlPoint3);
-
-        console.log(controlPoint4);
+        
 
     
         return {
@@ -286,7 +292,7 @@ function init() {
  //********************************************************
     
     // Set the curve for the ball
-    ballInstance.setCurve(combinedCurve);
+    ballInstance.setCurve(c);
 
     // Start the ball animation
     ballInstance.startAnimation();

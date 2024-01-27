@@ -6,7 +6,7 @@ class Ball {
         this.ball = null;
         this.curve = null;
         this.animationStartTime = 0;
-        this.animationDuration = 10000; // 5 seconds duration for the animation
+        this.animationDuration = 5000; // 5 seconds duration for the animation
     }
 
     createBall(position) {
