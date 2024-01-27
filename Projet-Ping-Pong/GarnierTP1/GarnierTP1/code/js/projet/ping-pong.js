@@ -73,12 +73,12 @@ function init() {
 
     } */
     
-    debutService = Math.floor(Math.random() * tableWidth/2);
-    otherSide = Math.floor(Math.random() * tableWidth/2);
+    
 
-    function service(debut,other)
+    function service()
     {
-        
+        debut= Math.floor(Math.random() * tableWidth/2);
+        other = Math.floor(Math.random() * tableWidth/2);
 
         start = ((-tableLength/2)-((tableLength*debut)/(2*(Math.abs(debut+other+0.01))))+tableLength/4)/(-tableLength/(2*(Math.abs(debut+other+0.01))));
         
@@ -86,7 +86,7 @@ function init() {
 
         otherSideLength = start + other
 
-        controlPoint1 = start - 1/6*otherSide;
+        controlPoint1 = start - 1/6*otherSideLength;
 
         controlPoint2 = start - 4/9*otherSideLength;
         controlPoint3 = start - 5/9*otherSideLength;
@@ -142,15 +142,23 @@ function init() {
 
     
 
-    function droit(lastVector)
+    function droit(lastVector,mod)
     {
+        if (mod%2==0)
+        {
+           signe = 1
+        }
+        else 
+        {
+            signe = -1
+        }
 
         otherSide = Math.floor(Math.random() * tableWidth/2);
         debut = lastVector.getPointAt(1).z;
 
-        pente = (3*tableLength)/(4*(Math.abs(debut+otherSide+0.01)));
+        pente = (3*tableLength)/(4*Math.abs((debut+signe*otherSide+0.01)));
 
-        if (otherSide < -debut)
+        if (otherSide < -debut || (otherSide > debut && debut >0))
         {
             pente = -pente
         }
@@ -158,7 +166,7 @@ function init() {
 
         controlPoint1 = (tableLength/4 - origine)/pente;
 
-        middlePoint = (origine)/pente;
+        middlePoint = -(origine)/pente;
 
         controlPoint2 = (-tableLength/12 - origine)/pente;
         controlPoint3 = (-tableLength/6 - origine)/pente;
@@ -174,24 +182,28 @@ function init() {
         a = new THREE.QuadraticBezierCurve3(
             lastVector.getPointAt(1),
             new THREE.Vector3(tableLength/4, racketPosY, controlPoint1),
-            new THREE.Vector3(0, 3*racketPosY/4, -middlePoint));
+            new THREE.Vector3(0, 3*racketPosY/4, middlePoint));
 
         b = new THREE.CubicBezierCurve3(
-            new THREE.Vector3(0, 3*racketPosY/4, -middlePoint),
+            new THREE.Vector3(0, 3*racketPosY/4, middlePoint),
             new THREE.Vector3(0, 3*racketPosY/4,controlPoint2),
             new THREE.Vector3(-tableLength/8, racketPosY/2, controlPoint3),
-            new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,-otherSide));
+            new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,-signe*otherSide));
             
 
         c = new THREE.QuadraticBezierCurve3(
-            new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,-otherSide),
+            new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,-signe*otherSide),
             new THREE.Vector3(-3*(tableLength/8), racketPosY, controlPoint4),
             new THREE.Vector3(-((tableLength/2) +racketPosX - racketThick - ballRadius/2), racketPosY,endWidth));
-
+        
+        
         const combinedCurve = new THREE.CurvePath();
+        
         combinedCurve.add(a);
         combinedCurve.add(b);
         combinedCurve.add(c);
+        
+        
         
     
         return {
@@ -200,19 +212,24 @@ function init() {
         };
     }
 
-    function diagonale(lastVector)
+    
+
+    function diagonale(lastVector,mod)
     {
+        if (mod%2==0)
+        {
+           signe = 1
+        }
+        else 
+        {
+            signe = -1
+            
+        }
         otherSide = Math.floor(Math.random() * tableWidth/2);
         debut = lastVector.getPointAt(1).z;
         
 
-        pente = (3*tableLength)/(4*((-debut+otherSide+0.01)));
-
-        
-        if (otherSide < Math.abs(debut) && debut>0)
-        {
-            pente = -pente
-        }
+        pente = (3*tableLength)/(4*((-debut+signe*otherSide+0.01)));
 
         
         origine = (-tableLength/2) - (pente*(debut));
@@ -245,11 +262,11 @@ function init() {
             new THREE.Vector3(0, 3*racketPosY/4, middlePoint),
             new THREE.Vector3(0, 3*racketPosY/4,controlPoint2),
             new THREE.Vector3(tableLength/8, racketPosY/2, controlPoint3),
-            new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,otherSide));
+            new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,signe*otherSide));
             
 
         c = new THREE.QuadraticBezierCurve3(
-            new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,otherSide),
+            new THREE.Vector3(tableLength/4, ballRadius+ tableHeight,signe*otherSide),
             new THREE.Vector3(3*(tableLength/8), racketPosY, controlPoint4),
             new THREE.Vector3(((tableLength/2) +racketPosX - racketThick - ballRadius/2), racketPosY,endWidth));
 
@@ -267,23 +284,54 @@ function init() {
         };
     }
 
+    score1 = 0;
+    score2 = 0;
+    random = Math.random() * (15 - 6) + 6;
+    mod=0;
     const combinedCurve = new THREE.CurvePath();
 
-    serviceResult= service(debutService,otherSide);
-    lastcurve = serviceResult.curveD
-    a = serviceResult.combinedCurve
-
+    serviceResult= service();
+    lastcurve = serviceResult.curveD;
+    a = serviceResult.combinedCurve;
     combinedCurve.add(a);
+    
 
-    droit = droit(lastcurve)
-    b = droit.combinedCurve
-    lastcurve = droit.lastcurve
-    combinedCurve.add(b);
+    for (let i = 0; i < 10; i++) {
+        /* if (i % 2 == 0) {
+            result = droit(lastcurve, mod)
+            a = droitResult.combinedCurve
+            lastcurve = droitResult.lastcurve
+    
+            console.log(i)
+            combinedCurve.add(a);
+        } else {
+            result = diagonale(lastcurve, mod)
+            a = diagonaleResult.combinedCurve
+            lastcurve = diagonaleResult.lastcurve
+    
+            console.log(i)
+            combinedCurve.add(a);
+        }
 
-    diagonale = diagonale(lastcurve)
-    c = diagonale.combinedCurve
-
-    combinedCurve.add(c);
+        a = result.combinedCurve
+        lastcurve = result.lastcurve
+    
+        console.log(i)
+        combinedCurve.add(a); */
+        result = droit(lastcurve, mod)
+        a = result.combinedCurve
+        lastcurve = result.lastcurve
+        combinedCurve.add(a);
+        
+        result = diagonale(lastcurve, mod)
+        a = result.combinedCurve
+        lastcurve = result.lastcurve
+    
+            
+        combinedCurve.add(a);
+        console.log(i)
+        mod += 1;
+    }
 
  
  //********************************************************
@@ -292,7 +340,7 @@ function init() {
  //********************************************************
     
     // Set the curve for the ball
-    ballInstance.setCurve(c);
+    ballInstance.setCurve(combinedCurve);
 
     // Start the ball animation
     ballInstance.startAnimation();
@@ -314,27 +362,6 @@ function init() {
     animate(); // Start the animation loop
 }
 
-function quadratic(a,b,c,d,e,f,g,h,i)
-{
-    const quadraticBezier = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3(a, b, c),
-        new THREE.Vector3(d, e, f),
-        new THREE.Vector3(g, h, i)
-    );
-    return quadraticBezier
-}
-
-function cubic(a,b,c,d,e,f,g,h,i,j,k,l)
-{
-    const cubic = new THREE.CubicBezierCurve3(
-        new THREE.Vector3(a, b, c),
-        new THREE.Vector3(d, e, f),
-        new THREE.Vector3(g, h, i),
-        new THREE.Vector3(j, k, l)
-    );
-
-    return cubic
-}
 
 
 
