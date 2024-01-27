@@ -28,6 +28,25 @@ function init() {
     const guiInstance = new window.Gui();
     setupLatheControls(guiInstance, tableInstance);
 
+    // Add GUI menu for table color
+    const tableColorFolder = guiInstance.addFolder('Table Color');
+    const tableColors = {
+        Green: 0x007a7a,
+        Blue: 0x019ad9,
+    };
+
+    tableInstance.color = 'Green'; // Set the default color to Green
+
+    const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
+
+    tableColorController.onChange(() => {
+        tableInstance.setColor(tableColors[tableInstance.color]);
+        tableInstance.render();
+    });
+
+
+
+
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
