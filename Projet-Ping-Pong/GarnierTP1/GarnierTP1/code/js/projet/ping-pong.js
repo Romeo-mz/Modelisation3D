@@ -44,6 +44,33 @@ function init() {
         tableInstance.render();
     });
 
+    // Add GUI menu for camera position
+    const cameraFolder = guiInstance.addFolder('Camera Position');
+    const cameraPosition = {
+        x: 20,
+        y: 10,
+        z: -10,
+    };
+
+    const cameraXController = cameraFolder.add(cameraPosition, 'x', -150, 150).step(1).name('X Position');
+    const cameraYController = cameraFolder.add(cameraPosition, 'y', -150, 150).step(1).name('Y Position');
+    const cameraZController = cameraFolder.add(cameraPosition, 'z', -150, 150).step(1).name('Z Position');
+
+    cameraXController.onChange(() => {
+        camera.position.x = cameraPosition.x;
+    });
+
+    cameraYController.onChange(() => {
+        camera.position.y = cameraPosition.y;
+    });
+
+    cameraZController.onChange(() => {
+        camera.position.z = cameraPosition.z;
+    });
+
+    // Update the camera position initially
+    camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    camera.lookAt(0, 0, 0);
 
 
 
