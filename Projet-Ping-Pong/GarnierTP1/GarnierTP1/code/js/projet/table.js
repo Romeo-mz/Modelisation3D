@@ -33,7 +33,7 @@ class Table{
         const lowerLeftEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), lowerLeftMaterial);
         const lowerRightEdge = new THREE.Mesh(new THREE.PlaneGeometry((length / 2) - 1, (width / 2) - 0.5), lowerRightMaterial);
 
-        upperLeftEdge.position.set(length / 4, height, -(width / 4));
+        upperLeftEdge.position.set(length /4, height, -(width / 4));
         upperRightEdge.position.set(length / 4, height, width / 4);
         lowerLeftEdge.position.set(-(length / 4), height, -(width / 4));
         lowerRightEdge.position.set(-(length / 4), height, width / 4);
@@ -67,7 +67,16 @@ class Table{
 
        
     }
+    getLength() {
+        return this.length;
+    }
+    getWidth() {
+        return this.width;
+    }
 
+    getHeight() {
+        return height
+    }
 }
 
 window.Table = Table;
