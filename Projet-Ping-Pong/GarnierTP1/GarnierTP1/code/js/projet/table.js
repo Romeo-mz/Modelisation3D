@@ -13,12 +13,11 @@ class Table{
         this.legMesh = null;
         this.height = height;
 
-        // Initialize legs array
-        this.legs = [new window.TableLeg(scene, this, height)];
-
+        
         // Initialize light
         this.light = new THREE.AmbientLight(0xffffff);
     }
+
     setLength(length){
         this.length = length;
         this.dispose();
@@ -62,48 +61,29 @@ class Table{
         })
 
         // Create the legs
-        this.setLegs(this.length, this.height, this.width)
+        this.setLegs(this.length, 10, this.width)
     }
 
     setLegs(length, height, width){
-        const legs = [];
-
+    
         const legUpperLeft = new window.TableLeg(this.scene, this, height);
         const legUpperRight = new window.TableLeg(this.scene, this, height);
         const legLowerLeft = new window.TableLeg(this.scene, this, height);
         const legLowerRight = new window.TableLeg(this.scene, this, height);
+        
 
         legUpperLeft.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
-        legUpperRight.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, width / 2 - 0.5);
-        legLowerLeft.position.set(-(length / 2) + 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
-        legLowerRight.position.set(-(length / 2) + 0.5, -legUpperLeft.height / 2, width / 2 - 0.5);
+        legUpperRight.position.set(length / 2 - 0.5, -legUpperRight.height / 2, width / 2 - 0.5);
+        legLowerLeft.position.set(-(length / 2) + 0.5, -legLowerLeft.height / 2, -(width / 2) + 0.5);
+        legLowerRight.position.set(-(length / 2) + 0.5, -legLowerRight.height / 2, width / 2 - 0.5);
         
         this.legMesh = [legUpperLeft, legUpperRight, legLowerLeft, legLowerRight];
         this.legMesh.forEach((leg) => {
             leg.render();
         });
     }
+    
 
-    setHeights(height) {
-        this.dispose()
-
-        this.setLegs(this.length, height, this.width)
-    }
-
-    setLatheControlPoints(latheIndex, points) {
-        if (this.legs && this.legs[latheIndex]) {
-            this.legs[latheIndex].setControlPoints(points);
-            this.dispose();
-            this.render();
-        }
-    }
-
-    setLightProperties(intensity, color) {
-        this.scene.remove(this.light);
-        this.light = new THREE.AmbientLight(0xffffff, intensity);
-        this.light.color.set(color);
-        this.scene.add(this.light);
-    }
 
     dispose() {
         if (this.tableMesh) {

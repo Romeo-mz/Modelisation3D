@@ -33,39 +33,30 @@ function init() {
 
     // Set camera position
 
-   // Create the gui
+    // Create the gui
    const guiInstance = new window.Gui();
 
    // Create a folder for controlling the lathe points
    const latheFolder = guiInstance.addFolder('Lathe Controls');
    
-   // Add controls for the first lathe control points
-   const pointsFirstLathe = tableInstance.legs[0].pointsFirstLathe;
 
-   pointsFirstLathe.forEach((point, index) => {
-        console.log(point)
-        latheFolder.add(point, 'x', -10, 10).name(`Point  X First Lathe`);
-        latheFolder.add(point, 'y', -10, 10).name(`Point  Y First Lathe`);
-   });
+    // Add controls for the first lathe
+    const firstLatheFolder = latheFolder.addFolder('First Lathe');
+    const pointsFirstLathe = tableInstance.legMesh[0].pointsFirstLathe;
+    const pointsSecondLathe = tableInstance.legMesh[0].pointsSecondLathe;
+    pointsFirstLathe.forEach((point, index) => {
+        firstLatheFolder.add(point, 'x', -1, 1).step(0.1).onChange(() => tableInstance.legMesh[index].setControlPointsFirst(pointsFirstLathe));
+        firstLatheFolder.add(point, 'y', -1, 1).step(0.1).onChange(() => tableInstance.legMesh[index].setControlPointsFirst(pointsFirstLathe));
+        renderer.render(scene, camera);
+    });
 
-   // Add controls for the second lathe control points
-   const pointsSecondLathe = tableInstance.legs[0].pointsSecondLathe;
-   pointsSecondLathe.forEach((point, index) => {
-        latheFolder.add(point, 'x', -10, 10).name(`Point X Second Lathe`);
-        latheFolder.add(point, 'y', -10, 10).name(`Point Y Second Lathe`);
-   });
+    // Add controls for the second lathe
+    const secondLatheFolder = latheFolder.addFolder('Second Lathe');
+    pointsSecondLathe.forEach((point, index) => {
+        secondLatheFolder.add(point, 'x', -1, 1).step(0.1).onChange(() => tableInstance.legMesh[index].setControlPointsSecond(pointsSecondLathe));
+        secondLatheFolder.add(point, 'y', -1, 1).step(0.1).onChange(() => tableInstance.legMesh[index].setControlPointsSecond(pointsSecondLathe));
+    });
 
-   // Add a folder for the light properties
-   const lightFolder = guiInstance.addFolder('Light Properties');
-
-   // Add controls for the light properties
-   lightFolder.add(tableInstance, 'setLightProperties', 0, 1).name('Light Intensity');
-   lightFolder.addColor(tableInstance.light, 'color').onChange(function (value) {
-       tableInstance.light.color.set(value);
-   });
-
-
-    // Your animation/rendering loop here
     function animate() {
         requestAnimationFrame(animate);
 
@@ -79,3 +70,5 @@ function init() {
 
     animate(); // Start the animation loop
 }
+
+
