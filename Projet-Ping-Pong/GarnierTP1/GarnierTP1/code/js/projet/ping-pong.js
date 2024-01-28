@@ -283,6 +283,64 @@ function init() {
             combinedCurve: combinedCurve
         };
     }
+    function inTheNet(lastVector)
+    {
+        
+        randomnet = Math.floor(Math.random() * tableWidth/2)
+        randomSide = Math.random();
+        if(randomSide < 0.5)
+        {
+            randomnet = -randomnet
+        }
+        start = lastVector.getPointAt(1)
+        a = new THREE.LineCurve3(start, new THREE.Vector3(0, ballRadius+ tableHeight,randomnet))
+        const combinedCurve = new THREE.CurvePath();
+        combinedCurve.add(a);
+
+        return{
+
+         combinedCurve : combinedCurve
+        }
+
+    }
+
+    function outside(lastVector)
+    {
+        
+        randomLength = Math.floor(Math.random() * tableLength/4)
+        randomWidth =  Math.floor(Math.random() * tableWidth/2)
+        randomSide = Math.random();
+        if(randomSide < 0.5)
+        {
+            randomWidth = -randomWidth
+        }
+        start = lastVector.getPointAt(1)
+        a = new THREE.LineCurve3(start, new THREE.Vector3(-lastVector.getPointAt(1).x-randomLength, ballRadius+ tableHeight,randomWidth))
+        const combinedCurve = new THREE.CurvePath();
+        combinedCurve.add(a);
+        return{
+
+         combinedCurve : combinedCurve
+        }
+
+    }
+
+    
+    function fail(lastcurve)
+    {
+        whichOne = Math.random();
+        if (whichOne < 0.5)
+        {
+            result = outside(lastcurve);
+        }
+        else{
+            result = inTheNet(lastcurve);
+        }
+        a = result.combinedCurve;
+        combinedCurve.add(a);
+
+        console.log(whichOne);
+    }
 
     score1 = 0;
     score2 = 0;
@@ -296,7 +354,7 @@ function init() {
     combinedCurve.add(a);
     
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 4; i++) {
         /* if (i % 2 == 0) {
             result = droit(lastcurve, mod)
             a = droitResult.combinedCurve
@@ -329,10 +387,12 @@ function init() {
     
             
         combinedCurve.add(a);
-        console.log(i)
+        
         mod += 1;
     }
-
+    
+    fail(lastcurve);
+    
  
  //********************************************************
  //
