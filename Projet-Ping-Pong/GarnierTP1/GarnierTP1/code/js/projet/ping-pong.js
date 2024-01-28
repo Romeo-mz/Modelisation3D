@@ -89,15 +89,6 @@ function init() {
     camera.lookAt(0, 0, 0);
 
 
-
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -130,7 +121,7 @@ function setupLatheControls(guiInstance, tableInstance) {
 
     setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
     setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
-}
+
     tableInstance.render();
 
     tableWidth = tableInstance.getWidth();
@@ -157,13 +148,13 @@ function setupLatheControls(guiInstance, tableInstance) {
     ballRadius = ballInstance.getRadius();
 }
 
-// Reste du code...
+
 
 
 function service()
     {
-        debut= Math.floor(Math.random() * tableWidth/2);
-        other = Math.floor(Math.random() * tableWidth/2);
+        debut= Math.random() * tableWidth/2;
+        other = Math.random() * tableWidth/2;
 
         start = ((-tableLength/2)-((tableLength*debut)/(2*(Math.abs(debut+other+0.01))))+tableLength/4)/(-tableLength/(2*(Math.abs(debut+other+0.01))));
         
@@ -238,7 +229,7 @@ function service()
             signe = -1
         }
 
-        otherSide = Math.floor(Math.random() * tableWidth/2);
+        otherSide = Math.random() * tableWidth/2;
         debut = lastVector.getPointAt(1).z;
 
         pente = (3*tableLength)/(4*Math.abs((debut+signe*otherSide+0.01)));
@@ -307,7 +298,7 @@ function service()
             signe = -1
             
         }
-        otherSide = Math.floor(Math.random() * tableWidth/2);
+        otherSide = Math.random() * tableWidth/2;
         debut = lastVector.getPointAt(1).z;
         
 
@@ -504,7 +495,7 @@ function runIteration()
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    init();
+    
 
     // Sélectionnez le bouton par son ID
     const startButton = document.getElementById('startButton');
