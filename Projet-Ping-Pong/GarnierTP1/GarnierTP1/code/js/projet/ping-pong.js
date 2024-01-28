@@ -201,10 +201,7 @@ function init() {
         
         combinedCurve.add(a);
         combinedCurve.add(b);
-        combinedCurve.add(c);
-        
-        
-        
+        combinedCurve.add(c);      
     
         return {
             lastcurve: c,
@@ -275,7 +272,6 @@ function init() {
         combinedCurve.add(b);
         combinedCurve.add(c);
         
-        
 
     
         return {
@@ -336,6 +332,7 @@ function init() {
         else{
             result = inTheNet(lastcurve);
         }
+        const combinedCurve = new THREE.CurvePath();
         a = result.combinedCurve;
         combinedCurve.add(a);
 
@@ -344,55 +341,75 @@ function init() {
 
     score1 = 0;
     score2 = 0;
+
     random = Math.random() * (15 - 6) + 6;
-    mod=0;
-    const combinedCurve = new THREE.CurvePath();
+        mod1=0;
+        mod2=0
+        const combinedCurve = new THREE.CurvePath();
 
-    serviceResult= service();
-    lastcurve = serviceResult.curveD;
-    a = serviceResult.combinedCurve;
-    combinedCurve.add(a);
-    
+        serviceResult= service();
+        lastcurve = serviceResult.curveD;
+        a = serviceResult.combinedCurve;
+        combinedCurve.add(a);
+        
 
-    for (let i = 0; i < 4; i++) {
-        /* if (i % 2 == 0) {
-            result = droit(lastcurve, mod)
-            a = droitResult.combinedCurve
-            lastcurve = droitResult.lastcurve
-    
-            console.log(i)
-            combinedCurve.add(a);
-        } else {
-            result = diagonale(lastcurve, mod)
-            a = diagonaleResult.combinedCurve
-            lastcurve = diagonaleResult.lastcurve
-    
-            console.log(i)
-            combinedCurve.add(a);
+        for (let i = 0; i < random-1; i++) {
+            if (i % 2 == 0) {
+                result = droit(lastcurve, mod1);
+                console.log(i,"droit");
+                mod1 +=1;
+
+            } 
+            else if (i%2==1)
+            {
+                result = diagonale(lastcurve, mod2);
+                console.log(i,"diagonale");
+                mod2 +=1;
+            }
+            
+            a = result.combinedCurve
+            lastcurve = result.lastcurve
+            
+        
+            combinedCurve.add(a); 
+            
+            
+        }
+        
+        fail(lastcurve);
+
+        if (random % 2 == 0)
+        {
+            score1 += 1;
+        }
+        else{
+            score2 +=1;
         }
 
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
-    
-        console.log(i)
-        combinedCurve.add(a); */
-        result = droit(lastcurve, mod)
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
-        combinedCurve.add(a);
-        
-        result = diagonale(lastcurve, mod)
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
-    
+        console.log(score1,score2);
+        ballInstance.setCurve(combinedCurve);
+
+        // Start the ball animation
+        ballInstance.startAnimation();
+
+        // Your animation/rendering loop here
+        function animate() {
+            requestAnimationFrame(animate);
             
-        combinedCurve.add(a);
-        
-        mod += 1;
-    }
+            ballInstance.updateBallPosition(Date.now());
+
+            // Rotate the table
+            // table.rotation.y += 0.01;
+            // table.rotation.x += 0.01;
+            controls.update();
+            // Render the scene with the camera
+            renderer.render(scene, camera);
+        }
+
+        animate(); // Start the animation loop
     
-    fail(lastcurve);
     
+
  
  //********************************************************
  //
@@ -400,26 +417,7 @@ function init() {
  //********************************************************
     
     // Set the curve for the ball
-    ballInstance.setCurve(combinedCurve);
-
-    // Start the ball animation
-    ballInstance.startAnimation();
-
-    // Your animation/rendering loop here
-    function animate() {
-        requestAnimationFrame(animate);
-        
-        ballInstance.updateBallPosition(Date.now());
-
-        // Rotate the table
-        // table.rotation.y += 0.01;
-        // table.rotation.x += 0.01;
-        controls.update();
-        // Render the scene with the camera
-        renderer.render(scene, camera);
-    }
-
-    animate(); // Start the animation loop
+    
 }
 
 
@@ -427,4 +425,17 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', function () {
     init();
+    // Votre code existant ici...
+
+    // Sélectionnez le bouton par son ID
+    const startButton = document.getElementById('startButton');
+
+    // Ajoutez un gestionnaire d'événements pour le clic sur le bouton
+    startButton.addEventListener('click', function () {
+        // Appelez votre fonction runIteration ici
+        runIteration();
+    });
+
+    // Démarrez l'animation après le chargement de la page
+    runIteration();
 });
