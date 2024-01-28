@@ -56,6 +56,7 @@ class Table{
         upperRightEdge.position.set(this.length / 4, height, width / 4);
         lowerLeftEdge.position.set(-(this.length / 4), height, -(width / 4));
         lowerRightEdge.position.set(-(this.length / 4), height, width / 4);
+ 
 
         field.push(upperLeftEdge, upperRightEdge, lowerLeftEdge, lowerRightEdge);
         
@@ -113,6 +114,17 @@ class Table{
         }
     }
     
+
+    getLength() {
+        return this.length;
+    }
+    getWidth() {
+        return this.width;
+    }
+
+    getHeight() {
+        return height
+    }
 }
 
 window.Table = Table;
