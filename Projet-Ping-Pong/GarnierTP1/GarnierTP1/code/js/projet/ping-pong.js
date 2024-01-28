@@ -1,13 +1,26 @@
 // ping-pong.js
+score1 = 0;
+score2 = 0;
+let tableLength;
+let tableWidth;
+let tableHeight;
+let racketPosX;
+let racketPosY;
+let ballRadius;
+let racketThick;
+let ballInstance;
+let controls;
+let renderer; // Déclaration de renderer en tant que variable globale
+let scene; // Déclaration de scene en tant que variable globale
+let camera; // Déclaration de camera en tant que variable globale
 
 function init() {
-    
     const canvas = document.getElementById('ping-pong');
-    const renderer = new THREE.WebGLRenderer({ canvas , antialias: true});
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 3000);
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); // Affectation de renderer en tant que variable globale
+    scene = new THREE.Scene(); // Affectation de scene en tant que variable globale
+    camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 3000); // Affectation de camera en tant que variable globale
     
-    const controls = new THREE.OrbitControls( camera, renderer.domElement );
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -23,10 +36,9 @@ function init() {
     const tableInstance = new window.Table(scene);
     tableInstance.render();
 
-    const tableWidth = tableInstance.getWidth();
-    const tableLength = tableInstance.getLength();
-    const tableHeight = tableInstance.getHeight();
-    
+    tableWidth = tableInstance.getWidth();
+    tableLength = tableInstance.getLength();
+    tableHeight = tableInstance.getHeight();
     
     // Create the net
     const netInstance = new window.Net(scene, tableInstance);
@@ -36,46 +48,22 @@ function init() {
     const racketInstance = new window.Racket(scene, tableInstance);
     racketInstance.render();
 
-    const racketPosX = racketInstance.getPosX();
-    const racketPosY = racketInstance.getPosY();
+    racketPosX = racketInstance.getPosX();
+    racketPosY = racketInstance.getPosY();
 
-    const racketThick = racketInstance.getThickness();
-
+    racketThick = racketInstance.getThickness();
 
     // Create the ball
-    const ballInstance = new TableTennisBall(scene, tableInstance);
+    ballInstance = new TableTennisBall(scene, tableInstance);
     ballInstance.render();
 
-    const ballRadius = ballInstance.getRadius();
+    ballRadius = ballInstance.getRadius();
+}
 
-    ball = ballInstance.ball
+// Reste du code...
 
-    
- 
- //********************************************************
- //
- //  D E B U T     SIMULATION
- //
- //********************************************************
 
-/*     
-    nbExchange =  Math.floor(Math.random() * 20); 
-    redScore = 0;
-    yellowScore = 0;
-
-    while(redScore != 11 || yellowScore != 11)
-    {
-        const finalCombinedCurve = new THREE.CurvePath();
-
-        debutService = Math.floor(Math.random() * tableWidth/2);
-        otherSide = Math.floor(Math.random() * tableWidth/2);
-        finalCombinedCurve.add(service());
-
-    } */
-    
-    
-
-    function service()
+function service()
     {
         debut= Math.floor(Math.random() * tableWidth/2);
         other = Math.floor(Math.random() * tableWidth/2);
@@ -201,10 +189,7 @@ function init() {
         
         combinedCurve.add(a);
         combinedCurve.add(b);
-        combinedCurve.add(c);
-        
-        
-        
+        combinedCurve.add(c);      
     
         return {
             lastcurve: c,
@@ -275,7 +260,6 @@ function init() {
         combinedCurve.add(b);
         combinedCurve.add(c);
         
-        
 
     
         return {
@@ -283,88 +267,157 @@ function init() {
             combinedCurve: combinedCurve
         };
     }
+    function inTheNet(lastVector)
+    {
+        
+        randomnet = Math.floor(Math.random() * tableWidth/2)
+        randomSide = Math.random();
+        if(randomSide < 0.5)
+        {
+            randomnet = -randomnet
+        }
+        start = lastVector.getPointAt(1)
+        a = new THREE.LineCurve3(start, new THREE.Vector3(0, ballRadius+ tableHeight,randomnet))
+        const combinedCurve = new THREE.CurvePath();
+        combinedCurve.add(a);
 
-    score1 = 0;
-    score2 = 0;
-    random = Math.random() * (15 - 6) + 6;
-    mod=0;
-    const combinedCurve = new THREE.CurvePath();
+        return{
 
-    serviceResult= service();
-    lastcurve = serviceResult.curveD;
-    a = serviceResult.combinedCurve;
-    combinedCurve.add(a);
-    
-
-    for (let i = 0; i < 10; i++) {
-        /* if (i % 2 == 0) {
-            result = droit(lastcurve, mod)
-            a = droitResult.combinedCurve
-            lastcurve = droitResult.lastcurve
-    
-            console.log(i)
-            combinedCurve.add(a);
-        } else {
-            result = diagonale(lastcurve, mod)
-            a = diagonaleResult.combinedCurve
-            lastcurve = diagonaleResult.lastcurve
-    
-            console.log(i)
-            combinedCurve.add(a);
+         combinedCurve : combinedCurve
         }
 
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
-    
-        console.log(i)
-        combinedCurve.add(a); */
-        result = droit(lastcurve, mod)
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
-        combinedCurve.add(a);
+    }
+
+    function outside(lastVector)
+    {
         
-        result = diagonale(lastcurve, mod)
-        a = result.combinedCurve
-        lastcurve = result.lastcurve
+        randomLength = Math.floor(Math.random() * tableLength/4)
+        randomWidth =  Math.floor(Math.random() * tableWidth/2)
+        randomSide = Math.random();
+        if(randomSide < 0.5)
+        {
+            randomWidth = -randomWidth
+        }
+        start = lastVector.getPointAt(1)
+        a = new THREE.LineCurve3(start, new THREE.Vector3(-lastVector.getPointAt(1).x-randomLength, ballRadius+ tableHeight,randomWidth))
+        const combinedCurve = new THREE.CurvePath();
+        combinedCurve.add(a);
+        return{
+
+         combinedCurve : combinedCurve
+        }
+
+    }
+
     
+function fail(lastcurve)
+    {
+        whichOne = Math.random();
+        if (whichOne < 0.5)
+        {
+            result = outside(lastcurve);
+        }
+        else{
+            result = inTheNet(lastcurve);
+        }
+        const combinedCurve = new THREE.CurvePath();
+        a = result.combinedCurve;
+        combinedCurve.add(a);
+        return {
             
-        combinedCurve.add(a);
-        console.log(i)
-        mod += 1;
-    }
-
- 
- //********************************************************
- //
- //         FIN SIMULATION
- //********************************************************
-    
-    // Set the curve for the ball
-    ballInstance.setCurve(combinedCurve);
-
-    // Start the ball animation
-    ballInstance.startAnimation();
-
-    // Your animation/rendering loop here
-    function animate() {
-        requestAnimationFrame(animate);
+            combinedCurve: combinedCurve
+        };
         
-        ballInstance.updateBallPosition(Date.now());
-
-        // Rotate the table
-        // table.rotation.y += 0.01;
-        // table.rotation.x += 0.01;
-        controls.update();
-        // Render the scene with the camera
-        renderer.render(scene, camera);
     }
 
-    animate(); // Start the animation loop
-}
+
+
+function runIteration()
+    {
+       
+        random = Math.floor(Math.random() * (15 - 6) + 6);
+        mod1=0;
+        mod2=0
+        const combinedCurve = new THREE.CurvePath();
+
+        serviceResult= service();
+        lastcurve = serviceResult.curveD;
+        a = serviceResult.combinedCurve;
+        combinedCurve.add(a);
+        
+
+        for (let i = 0; i < random-1; i++) {
+            if (i % 2 == 0) {
+                result = droit(lastcurve, mod1);
+                mod1 +=1;
+
+            } 
+            else if (i%2==1)
+            {
+                result = diagonale(lastcurve, mod2);
+                mod2 +=1;
+            }
+            
+            a = result.combinedCurve
+            lastcurve = result.lastcurve
+            
+        
+            combinedCurve.add(a); 
+            
+            
+        }
+        
+        result = fail(lastcurve);
+        a = result.combinedCurve
+        combinedCurve.add(a); 
+
+        if (random % 2 == 0)
+        {
+            score1 += 1;
+        }
+        else{
+            score2 +=1;
+        }
+        
+        console.log("Jaune : "+score1,"Rouge : " +score2);
+        ballInstance.setCurve(combinedCurve);
+
+        // Start the ball animation
+        ballInstance.startAnimation();
+
+        // Your animation/rendering loop here
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            ballInstance.updateBallPosition(Date.now());
+
+            // Rotate the table
+            // table.rotation.y += 0.01;
+            // table.rotation.x += 0.01;
+            controls.update();
+            // Render the scene with the camera
+            renderer.render(scene, camera);
+        }
+        console.log(random)
+        animate(); // Start the animation loop
+    
+    }
 
 
 
 
 document.addEventListener('DOMContentLoaded', function () {
     init();
+
+    // Sélectionnez le bouton par son ID
+    const startButton = document.getElementById('startButton');
+
+    // Ajoutez un gestionnaire d'événements pour le clic sur le bouton
+    startButton.addEventListener('click', function () {
+        // Appelez votre fonction runIteration ici
+        runIteration();
+    });
+
+    // Démarrez l'animation après le chargement de la page
+    runIteration(); 
 });
