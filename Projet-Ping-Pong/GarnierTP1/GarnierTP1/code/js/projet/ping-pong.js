@@ -36,10 +36,23 @@ function init() {
     const tableInstance = new window.Table(scene);
     const netInstance = new window.Net(scene, tableInstance);
     const racketInstance1 = new window.Racket(scene, tableInstance);
+    const racketInstance = new window.Racket(scene, tableInstance);
+    ballInstance = new TableTennisBall(scene, tableInstance);
 
+
+    racketPosX = racketInstance.getPosX();
+    racketPosY = racketInstance.getPosY();
+
+    racketThick = racketInstance.getThickness();
+    ballRadius = ballInstance.getRadius();
+
+
+    ballInstance.render();
     tableInstance.render();
     netInstance.render();
     racketInstance1.render();
+    racketInstance.render();
+
 
     const guiInstance = new window.Gui();
     setupLatheControls(guiInstance, tableInstance);
@@ -88,6 +101,9 @@ function init() {
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
     camera.lookAt(0, 0, 0);
 
+    tableWidth = tableInstance.getWidth();
+    tableLength = tableInstance.getLength();
+    tableHeight = tableInstance.getHeight();
 
 
     function animate() {
@@ -130,35 +146,9 @@ function setupLatheControls(guiInstance, tableInstance) {
 
     setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
     setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
-}
+
     tableInstance.render();
-
-    tableWidth = tableInstance.getWidth();
-    tableLength = tableInstance.getLength();
-    tableHeight = tableInstance.getHeight();
-    
-    // Create the net
-    const netInstance = new window.Net(scene, tableInstance);
-    netInstance.render();
-
-    // Create the racket
-    const racketInstance = new window.Racket(scene, tableInstance);
-    racketInstance.render();
-
-    racketPosX = racketInstance.getPosX();
-    racketPosY = racketInstance.getPosY();
-
-    racketThick = racketInstance.getThickness();
-
-    // Create the ball
-    ballInstance = new TableTennisBall(scene, tableInstance);
-    ballInstance.render();
-
-    ballRadius = ballInstance.getRadius();
 }
-
-// Reste du code...
-
 
 function service()
     {
@@ -504,7 +494,6 @@ function runIteration()
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    init();
 
     // Sélectionnez le bouton par son ID
     const startButton = document.getElementById('startButton');
@@ -518,4 +507,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Démarrez l'animation après le chargement de la page
     runIteration(); 
 });
-

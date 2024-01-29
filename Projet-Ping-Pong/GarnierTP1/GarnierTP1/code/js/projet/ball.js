@@ -32,7 +32,7 @@ class Ball {
     const position = this.curve.getPointAt(clampedT);
     this.ball.position.copy(position);
 
-    if (t >= 1) {
+    if (t >= 1 && t <= 1.05) {
         // Animation terminée, peut-être arrêtez ici ou effectuez une autre action
         console.log("Animation terminée");
     }

@@ -23,6 +23,7 @@ class Table{
         this.dispose();
         this.render(); 
     }
+    
     render(){
 
         const geometry = new THREE.BoxGeometry(this.length,  width, height);
@@ -36,10 +37,7 @@ class Table{
         this.tableMesh = plane;
 
         const field = [];
-        const upperLeftColor = 0xf7b9c1;
-        const upperRightColor = 0xb9c1f7;
-        const lowerLeftColor = 0xf7f7b9;
-        const lowerRightColor = 0xc1f7b9;
+        
         
         const upperLeftMaterial = new THREE.MeshPhongMaterial({ color: this.color, side: THREE.DoubleSide }); // pink
         const upperRightMaterial = new THREE.MeshPhongMaterial({ color: this.color, side: THREE.DoubleSide }); // yellow
