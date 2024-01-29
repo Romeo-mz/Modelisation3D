@@ -13,6 +13,7 @@ let controls;
 let renderer; // Déclaration de renderer en tant que variable globale
 let scene; // Déclaration de scene en tant que variable globale
 let camera; // Déclaration de camera en tant que variable globale
+let initialTime;
 
 function init() {
     const canvas = document.getElementById('ping-pong');
@@ -146,6 +147,7 @@ function setupLatheControls(guiInstance, tableInstance) {
     ballInstance.render();
 
     ballRadius = ballInstance.getRadius();
+    initialTime = ballInstance.animationDuration;
 }
 
 
@@ -182,7 +184,7 @@ function service()
             new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,debut));
             
         
-
+ 
         b = new THREE.CubicBezierCurve3(
             new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,debut),
             new THREE.Vector3(-tableLength/4, racketPosY/2,controlPoint2),
@@ -466,30 +468,61 @@ function runIteration()
         else{
             score2 +=1;
         }
+
         
-        console.log("Jaune : "+score1,"Rouge : " +score2);
+        
         ballInstance.setCurve(combinedCurve);
+
+       
+
+        ballInstance.animationDuration = initialTime * random;
+            
+        const animationDuration = ballInstance.animationDuration;
+
+        console.log(animationDuration);
 
         // Start the ball animation
         ballInstance.startAnimation();
 
         // Your animation/rendering loop here
         function animate() {
+           
             requestAnimationFrame(animate);
             
             ballInstance.updateBallPosition(Date.now());
 
-            // Rotate the table
-            // table.rotation.y += 0.01;
-            // table.rotation.x += 0.01;
+           
+            
+            if (Date.now() - ballInstance.animationStartTime >= animationDuration) {
+                updateScoreTable(score1,score2)
+            }
+           
+            
+                
             controls.update();
             // Render the scene with the camera
             renderer.render(scene, camera);
         }
         console.log(random)
         animate(); // Start the animation loop
-    
+
+        
+        console.log("Jaune : "+score1,"Rouge : " +score2);
+        
+      
     }
+
+    // Après chaque lancer
+    function updateScoreTable(score1,score2) {
+        const teamYellowCell = document.getElementById('teamYellowScore');
+        const teamRedCell = document.getElementById('teamRedScore');
+    
+        // Mettez à jour les scores dans les cellules
+        teamYellowCell.textContent = score1;
+        teamRedCell.textContent = score2;
+    }
+
+
 
 
 
