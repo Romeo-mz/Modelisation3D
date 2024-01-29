@@ -13,20 +13,33 @@ class TableLeg {
         ];
 
         this.pointsSecondBezier = [
-            new THREE.Vector2(0.1, this.height / 2),
-            new THREE.Vector2(0.1, this.height / 2),
-            new THREE.Vector2(0, this.height / 2),
+            new THREE.Vector2(0.1, -this.height / 4), // y start for the height of the second lathe leg
+            new THREE.Vector2(0.3, this.height / 2),
+            new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
         ];
     }
 
     render() {
-        const legGeometry = this.generateLegGeometry();
-        const legMaterial = new THREE.MeshBasicMaterial({ color: 0x007879 });
-        this.mesh = new THREE.Mesh(legGeometry, legMaterial);
-        this.mesh.position.set(this.position.x, this.position.y - 0.01, this.position.z);
-
-        this.scene.add(this.mesh);
-        // this.createFeet();
+        const [legGeometryFirstLathe, legGeometrySecondLathe] = this.generateLegGeometries();
+        const legMaterialFirst = new THREE.MeshBasicMaterial({ color: 0x007879 });
+        const legMaterialSecond = new THREE.MeshBasicMaterial({ color: 0xFF0000 }); // Use a different color for the second lathe
+    
+        const meshFirst = new THREE.Mesh(legGeometryFirstLathe, legMaterialFirst);
+        const meshSecond = new THREE.Mesh(legGeometrySecondLathe, legMaterialSecond);
+    
+        meshFirst.position.set(this.position.x, this.position.y - 0.01, this.position.z);
+        meshSecond.position.set(this.position.x, this.position.y - 0.01, this.position.z);
+    
+        this.scene.add(meshFirst);
+        this.scene.add(meshSecond);
+    }
+    
+    generateLegGeometries() {
+        const latheSegments = 20;
+        const legGeometryFirstLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsFirstBezier, 20), latheSegments);
+        const legGeometrySecondLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsSecondBezier, 20), latheSegments);
+    
+        return [legGeometryFirstLathe, legGeometrySecondLathe];
     }
 
     generateLegGeometry() {
