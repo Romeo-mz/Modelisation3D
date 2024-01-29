@@ -52,10 +52,9 @@ function init() {
     netInstance.render();
     racketInstance1.render();
     racketInstance.render();
-
+    tableInstance.render();
 
     const guiInstance = new window.Gui();
-    setupLatheControls(guiInstance, tableInstance);
 
     // Add GUI menu for table color
     const tableColorFolder = guiInstance.addFolder('Table Color');
@@ -121,34 +120,9 @@ function init() {
     });
 }
 
-function setupLatheControls(guiInstance, tableInstance) {
-    const latheFolder = guiInstance.addFolder('Lathe Controls');
 
-    const setupLatheFolder = (folder, points, setControlPointsFunction) => {
-        points.forEach((point, index) => {
-            folder.add(point, 'x', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
-            folder.add(point, 'y', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
-        });
-    };
+    
 
-    const firstLatheFolder = latheFolder.addFolder('First Lathe');
-    const secondLatheFolder = latheFolder.addFolder('Second Lathe');
-
-    const setControlPointsFirst = (index, points) => {
-        tableInstance.legMesh[index].setControlPointsFirst(points);
-        tableInstance.render();
-    };
-
-    const setControlPointsSecond = (index, points) => {
-        tableInstance.legMesh[index].setControlPointsSecond(points);
-        tableInstance.render();
-    };
-
-    setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
-    setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
-
-    tableInstance.render();
-}
 
 function service()
     {
