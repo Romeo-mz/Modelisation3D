@@ -1,11 +1,11 @@
 class TableLeg {
-    constructor(scene, table, height = table.width / 3) {
+    constructor(scene, table, height = table.width / 3, pointsFirst = null, pointsSecond = null) {
         this.scene = scene;
         this.table = table;
         this.position = new THREE.Vector3();
         this.height = height;
-        this.mesh = null;
-
+        this.meshFirst = null;
+        this.meshSecond = null;
         this.pointsFirstBezier = [
             new THREE.Vector2(0.2, 0),
             new THREE.Vector2(0.3, this.height / 4),
@@ -17,6 +17,10 @@ class TableLeg {
             new THREE.Vector2(0.3, this.height / 2),
             new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
         ];
+        if (pointsFirst && pointsSecond) {
+            this.pointsFirstBezier = pointsFirst;
+            this.pointsSecondBezier = pointsSecond;
+        }
     }
 
     render() {
@@ -24,14 +28,15 @@ class TableLeg {
         const legMaterialFirst = new THREE.MeshBasicMaterial({ color: 0x007879 });
         const legMaterialSecond = new THREE.MeshBasicMaterial({ color: 0xFF0000 }); // Use a different color for the second lathe
     
-        const meshFirst = new THREE.Mesh(legGeometryFirstLathe, legMaterialFirst);
-        const meshSecond = new THREE.Mesh(legGeometrySecondLathe, legMaterialSecond);
+        this.meshFirst = new THREE.Mesh(legGeometryFirstLathe, legMaterialFirst);
+        this.meshSecond = new THREE.Mesh(legGeometrySecondLathe, legMaterialSecond);
     
-        meshFirst.position.set(this.position.x, this.position.y - 0.01, this.position.z);
-        meshSecond.position.set(this.position.x, this.position.y - 0.01, this.position.z);
-    
-        this.scene.add(meshFirst);
-        this.scene.add(meshSecond);
+        this.meshFirst.position.set(this.position.x, this.position.y - 0.01, this.position.z);
+        this.meshSecond.position.set(this.position.x, this.position.y - 0.01, this.position.z);
+        
+
+        this.scene.add(this.meshFirst);
+        this.scene.add(this.meshSecond);
     }
     
     generateLegGeometries() {
@@ -98,21 +103,15 @@ class TableLeg {
     }
 
     dispose() {
-        if (this.mesh) {
-            this.scene.remove(this.mesh);
-
-            if (this.mesh.geometry) {
-                this.mesh.geometry.dispose();
-            }
-
-            if (this.mesh.material) {
-                if (this.mesh.material.dispose) {
-                    this.mesh.material.dispose();
-                }
-            }
-
-            this.mesh = null;
+        console.log('dispose');
+        if (this.meshFirst) {
+            this.scene.remove(this.meshFirst);
+            this.scene.remove(this.meshSecond);
+            console.log('yazu');
         }
+        this.scene.remove(this.meshFirst);
+        this.scene.remove(this.meshSecond);
+
     }
 }
 

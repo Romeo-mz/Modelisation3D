@@ -74,15 +74,18 @@ class Table{
             this.color = color; // Update the current color
         }
     }
-
-    setLegs(length, height, width){
-    
-        const legUpperLeft = new window.TableLeg(this.scene, this, height);
-        const legUpperRight = new window.TableLeg(this.scene, this, height);
-        const legLowerLeft = new window.TableLeg(this.scene, this, height);
-        const legLowerRight = new window.TableLeg(this.scene, this, height);
+    setControlPoints(pointsFirst, pointsSecond) {
+        this.dispose();
+        this.setLegs(length, height, width, pointsFirst, pointsSecond);
+    }
+    setLegs(length, height, width, pointsFirst, pointsSecond){
         
 
+        const legUpperLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legUpperRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legLowerLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legLowerRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        
         legUpperLeft.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
         legUpperRight.position.set(length / 2 - 0.5, -legUpperRight.height / 2, width / 2 - 0.5);
         legLowerLeft.position.set(-(length / 2) + 0.5, -legLowerLeft.height / 2, -(width / 2) + 0.5);
@@ -96,22 +99,25 @@ class Table{
     
 
 
-    dispose() {
-        if (this.tableMesh) {
-            this.scene.remove(this.tableMesh);
-            this.tableMesh.geometry.dispose();
-            this.tableMesh.material.dispose();
-            this.tableMesh = null;
-        }
-
-        if (this.legMesh) {
-            this.legMesh.forEach((leg) => {
-                this.scene.remove(leg.mesh);
-            });
-            this.legMesh = null;
-        }
+   dispose() {
+    if (this.tableMesh) {
+        this.scene.remove(this.tableMesh);
+        this.tableMesh.geometry.dispose();
+        this.tableMesh.material.dispose();
+        this.tableMesh = null;
     }
-    
+
+    if (this.legMesh) {
+        console.log('dispose legs');
+        this.legMesh.forEach((leg) => {
+            console.log(leg)
+            this.scene.remove(leg.meshFirst);
+            this.scene.remove(leg.meshSecond);
+            
+        });
+        this.legMesh = null;
+    }
+}
 
     getLength() {
         return this.length;

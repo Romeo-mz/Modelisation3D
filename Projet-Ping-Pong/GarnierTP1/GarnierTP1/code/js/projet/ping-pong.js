@@ -52,7 +52,6 @@ function init() {
     netInstance.render();
     racketInstance1.render();
     racketInstance.render();
-    tableInstance.render();
 
     const guiInstance = new window.Gui();
 
@@ -63,7 +62,7 @@ function init() {
         Blue: 0x019ad9,
     };
 
-    tableInstance.color = 'Green'; // Set the default color to Green
+    tableInstance.color = 0x007a7a; // Set the default color to Green
 
     const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
 
@@ -71,6 +70,63 @@ function init() {
         tableInstance.setColor(tableColors[tableInstance.color]);
         tableInstance.render();
     });
+    // Add GUI menu for Bezier control points
+    const bezierFolder = guiInstance.addFolder('Bezier Control Points');
+    const bezierControlPointsFirst = {
+        point1: { x: 0.2, y: 0 },
+        point2: { x: 0.3, y: 1 },
+        point3: { x: 0.1, y: 2 },
+    };
+
+    const bezierControlPointsSecond = {
+        point1: { x: 0.2, y: 0 },
+        point2: { x: 0.3, y: 1 },
+        point3: { x: 0.1, y: 2 },
+    };
+
+    // Create controllers for each control point
+    const point1XController = bezierFolder.add(bezierControlPointsFirst.point1, 'x', 0, 5).step(1).name('Point 1 X');
+    const point2XController = bezierFolder.add(bezierControlPointsFirst.point2, 'x', 0, 5).step(1).name('Point 2 X');
+    const point3XController = bezierFolder.add(bezierControlPointsFirst.point3, 'x', 0, 5).step(1).name('Point 3 X');
+    const point1YController = bezierFolder.add(bezierControlPointsFirst.point1, 'y', 0, 5).step(1).name('Point 1 Y');
+    const point2YController = bezierFolder.add(bezierControlPointsFirst.point2, 'y', 0, 5).step(1).name('Point 2 Y');
+    const point3YController = bezierFolder.add(bezierControlPointsFirst.point3, 'y', 0, 5).step(1).name('Point 3 Y');
+
+    const point4Controller = bezierFolder.add(bezierControlPointsSecond.point1, 'y', 0, 2).step(0.1).name('Point 1 Y');
+    const point5Controller = bezierFolder.add(bezierControlPointsSecond.point2, 'y', 0, 2).step(0.1).name('Point 2 Y');
+    const point6Controller = bezierFolder.add(bezierControlPointsSecond.point3, 'y', 0, 2).step(0.1).name('Point 3 Y');
+    // Function to update the Bezier curve when control points change
+    const updateBezierCurve = () => {
+        const pointsFirst = [
+            new THREE.Vector2(bezierControlPointsFirst.point1.x, bezierControlPointsFirst.point1.y),
+            new THREE.Vector2(bezierControlPointsFirst.point2.x, bezierControlPointsFirst.point2.y),
+            new THREE.Vector2(bezierControlPointsFirst.point3.x, bezierControlPointsFirst.point3.y),
+        ];
+        console.log(bezierControlPointsFirst.point1.x, bezierControlPointsFirst.point1.y)
+
+        const pointsSecond = [
+            new THREE.Vector2(bezierControlPointsSecond.point1.x, bezierControlPointsSecond.point1.y),
+            new THREE.Vector2(bezierControlPointsSecond.point2.x, bezierControlPointsSecond.point2.y),
+            new THREE.Vector2(bezierControlPointsSecond.point3.x, bezierControlPointsSecond.point3.y),
+        ];
+        tableInstance.setControlPoints([
+            tableInstance.setControlPoints(pointsFirst, pointsSecond)
+        ]);
+        
+        tableInstance.render();
+    };
+
+    // Listen for changes in control points and update the Bezier curve
+    point1XController.onChange(updateBezierCurve);
+    point2XController.onChange(updateBezierCurve);
+    point3XController.onChange(updateBezierCurve);
+    point1YController.onChange(updateBezierCurve);
+    point2YController.onChange(updateBezierCurve);
+    point3YController.onChange(updateBezierCurve);
+
+    point4Controller.onChange(updateBezierCurve);
+    point5Controller.onChange(updateBezierCurve);
+    point6Controller.onChange(updateBezierCurve);
 
     // Add GUI menu for camera position
     const cameraFolder = guiInstance.addFolder('Camera Position');
