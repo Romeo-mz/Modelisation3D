@@ -9,7 +9,7 @@ class TableTennisRacket {
 
    }
 
-   createRacket(position,front,back) {
+   createRacket(position, front, back) {
     // Create racket handle
     const handleGeometry = new THREE.CylinderGeometry(0.1, 0.2, 2, 32);
     const handleMaterial = new THREE.MeshPhongMaterial({ color: 0x996633 });
@@ -17,7 +17,8 @@ class TableTennisRacket {
     handle.position.set(position.x, position.y + 1.5, position.z);
 
     // Create racket face
-    const faceGeometry = new THREE.BoxGeometry(this.thickness, 2, 1);
+    const faceGeometry = new THREE.CylinderGeometry(1, 1, this.thickness, 32);
+    faceGeometry.rotateZ(Math.PI / 2);
 
     // Different colors for each side
     const faceMaterials = [
@@ -40,11 +41,12 @@ class TableTennisRacket {
     this.scene.add(racket);
 }
 
+
 render() {
     const racket1Position = new THREE.Vector3(-this.table.length / 2 -this.posX, 0, 0);
     const racket2Position = new THREE.Vector3(this.table.length / 2 + this.posX, 0, 0);
 
-    this.createRacket(racket1Position,0x000000,0xff0000);
+    this.createRacket(racket1Position,0xff0000,0x000000);
     this.createRacket(racket2Position,0xffff00,0x000000);
 }
 
@@ -58,6 +60,8 @@ getPosY()
 getThickness() {
     return this.thickness;
 }
+
+
     
     }
 window.Racket = TableTennisRacket;
