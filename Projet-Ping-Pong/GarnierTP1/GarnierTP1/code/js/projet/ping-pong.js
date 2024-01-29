@@ -37,7 +37,7 @@ function init() {
     const netInstance = new window.Net(scene, tableInstance);
     const racketInstance1 = new window.Racket(scene, tableInstance);
     const racketInstance = new window.Racket(scene, tableInstance);
-    ballInstance = new TableTennisBall(scene, tableInstance);
+    ballInstance = new window.TableTennisBall(scene, tableInstance);
 
 
     racketPosX = racketInstance.getPosX();

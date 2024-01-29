@@ -6,10 +6,16 @@ class TableLeg {
         this.height = height;
         this.mesh = null;
 
-        this.pointsBezier = [
+        this.pointsFirstBezier = [
             new THREE.Vector2(0.2, 0),
             new THREE.Vector2(0.3, this.height / 4),
             new THREE.Vector2(0.1, this.height / 2),
+        ];
+
+        this.pointsSecondBezier = [
+            new THREE.Vector2(0.1, this.height / 2),
+            new THREE.Vector2(0.1, this.height / 2),
+            new THREE.Vector2(0, this.height / 2),
         ];
     }
 
@@ -20,14 +26,18 @@ class TableLeg {
         this.mesh.position.set(this.position.x, this.position.y - 0.01, this.position.z);
 
         this.scene.add(this.mesh);
-        this.createFeet();
+        // this.createFeet();
     }
 
     generateLegGeometry() {
         const latheSegments = 20;
-        const points = this.lathePoints(this.pointsBezier, latheSegments);
-        const legGeometry = new THREE.LatheGeometry(points, latheSegments);
-
+        const legGeometryFirstLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsFirstBezier, 20), latheSegments);
+        const legGeometrySecondLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsSecondBezier, 20), latheSegments);
+    
+        const legGeometry = new THREE.Geometry();
+        legGeometry.merge(legGeometryFirstLathe);
+        legGeometry.merge(legGeometrySecondLathe);
+    
         return legGeometry;
     }
 
