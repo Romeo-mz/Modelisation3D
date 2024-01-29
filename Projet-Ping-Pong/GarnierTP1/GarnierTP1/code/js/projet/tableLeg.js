@@ -24,6 +24,7 @@ class TableLeg {
     }
 
     render() {
+
         const [legGeometryFirstLathe, legGeometrySecondLathe] = this.generateLegGeometries();
         const legMaterialFirst = new THREE.MeshBasicMaterial({ color: 0x007879 });
         const legMaterialSecond = new THREE.MeshBasicMaterial({ color: 0xFF0000 }); // Use a different color for the second lathe
@@ -34,9 +35,10 @@ class TableLeg {
         this.meshFirst.position.set(this.position.x, this.position.y - 0.01, this.position.z);
         this.meshSecond.position.set(this.position.x, this.position.y - 0.01, this.position.z);
         
-
         this.scene.add(this.meshFirst);
         this.scene.add(this.meshSecond);
+
+        // this.createFeet();
     }
     
     generateLegGeometries() {
@@ -105,9 +107,8 @@ class TableLeg {
     dispose() {
         console.log('dispose');
         if (this.meshFirst) {
-            this.scene.remove(this.meshFirst);
-            this.scene.remove(this.meshSecond);
-            console.log('yazu');
+            // this.scene.remove(this.meshFirst);
+            // this.scene.remove(this.meshSecond);
         }
         this.scene.remove(this.meshFirst);
         this.scene.remove(this.meshSecond);

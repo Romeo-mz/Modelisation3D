@@ -79,8 +79,6 @@ class Table{
         this.setLegs(length, height, width, pointsFirst, pointsSecond);
     }
     setLegs(length, height, width, pointsFirst, pointsSecond){
-        
-
         const legUpperLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
         const legUpperRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
         const legLowerLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
@@ -91,6 +89,7 @@ class Table{
         legLowerLeft.position.set(-(length / 2) + 0.5, -legLowerLeft.height / 2, -(width / 2) + 0.5);
         legLowerRight.position.set(-(length / 2) + 0.5, -legLowerRight.height / 2, width / 2 - 0.5);
         
+
         this.legMesh = [legUpperLeft, legUpperRight, legLowerLeft, legLowerRight];
         this.legMesh.forEach((leg) => {
             leg.render();
@@ -108,11 +107,10 @@ class Table{
     }
 
     if (this.legMesh) {
-        console.log('dispose legs');
         this.legMesh.forEach((leg) => {
-            console.log(leg)
-            this.scene.remove(leg.meshFirst);
-            this.scene.remove(leg.meshSecond);
+            // console.log(leg)
+            // this.scene.remove(leg.meshFirst);
+            // this.scene.remove(leg.meshSecond);
             
         });
         this.legMesh = null;
