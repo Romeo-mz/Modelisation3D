@@ -84,10 +84,12 @@ class TableLeg {
     }
 
     setControlPoints(points) {
-        this.pointsBezier = points;
+        this.pointsFirstBezier = points[0];
+        this.pointsSecondBezier = points[1];
         this.dispose();
         this.render();
     }
+
 
     createFeet() {
         const footLength = 2;

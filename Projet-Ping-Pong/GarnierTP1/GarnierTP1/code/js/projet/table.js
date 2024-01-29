@@ -79,6 +79,7 @@ class Table{
         this.setLegs(length, height, width, pointsFirst, pointsSecond);
     }
     setLegs(length, height, width, pointsFirst, pointsSecond){
+        console.log(pointsFirst, pointsSecond)
         const legUpperLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
         const legUpperRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
         const legLowerLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
@@ -107,11 +108,26 @@ class Table{
     }
 
     if (this.legMesh) {
+        console.log('dispose legs');
         this.legMesh.forEach((leg) => {
-            // console.log(leg)
-            // this.scene.remove(leg.meshFirst);
-            // this.scene.remove(leg.meshSecond);
+            console.log(leg);
             
+            // Check if leg has meshes before accessing their properties
+            if (leg.meshFirst && leg.meshFirst.geometry) {
+                console.log('dispose first');
+                this.scene.remove(leg.meshFirst);
+                leg.meshFirst.geometry.dispose();
+                leg.meshFirst.material.dispose();
+                leg.meshFirst = null;
+            }
+
+            if (leg.meshSecond && leg.meshSecond.geometry) {
+                console.log('dispose second');
+                this.scene.remove(leg.meshSecond);
+                leg.meshSecond.geometry.dispose();
+                leg.meshSecond.material.dispose();
+                leg.meshSecond = null;
+            }
         });
         this.legMesh = null;
     }

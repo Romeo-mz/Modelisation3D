@@ -95,24 +95,21 @@ function init() {
     const point4Controller = bezierFolder.add(bezierControlPointsSecond.point1, 'y', 0, 2).step(0.1).name('Point 1 Y');
     const point5Controller = bezierFolder.add(bezierControlPointsSecond.point2, 'y', 0, 2).step(0.1).name('Point 2 Y');
     const point6Controller = bezierFolder.add(bezierControlPointsSecond.point3, 'y', 0, 2).step(0.1).name('Point 3 Y');
-    // Function to update the Bezier curve when control points change
+    
     const updateBezierCurve = () => {
         const pointsFirst = [
             new THREE.Vector2(bezierControlPointsFirst.point1.x, bezierControlPointsFirst.point1.y),
             new THREE.Vector2(bezierControlPointsFirst.point2.x, bezierControlPointsFirst.point2.y),
             new THREE.Vector2(bezierControlPointsFirst.point3.x, bezierControlPointsFirst.point3.y),
         ];
-        console.log(bezierControlPointsFirst.point1.x, bezierControlPointsFirst.point1.y)
-
+    
         const pointsSecond = [
             new THREE.Vector2(bezierControlPointsSecond.point1.x, bezierControlPointsSecond.point1.y),
             new THREE.Vector2(bezierControlPointsSecond.point2.x, bezierControlPointsSecond.point2.y),
             new THREE.Vector2(bezierControlPointsSecond.point3.x, bezierControlPointsSecond.point3.y),
         ];
-        tableInstance.setControlPoints([
-            tableInstance.setControlPoints(pointsFirst, pointsSecond)
-        ]);
-        
+    
+        tableInstance.setControlPoints(pointsFirst, pointsSecond);
         tableInstance.render();
     };
 
