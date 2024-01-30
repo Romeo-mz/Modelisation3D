@@ -73,9 +73,6 @@ class Table{
         }
     }
     setControlPoints(pointsFirst, pointsSecond) {
-        // this.dispose();
-        console.log("set control points")
-        console.log(pointsFirst.point)
         this.setLegs(length, height, width, pointsFirst, pointsSecond);
     }
 
@@ -102,21 +99,17 @@ class Table{
 
    dispose() {
     if (this.legMesh) {
-        console.log('dispose legs');
         this.legMesh.forEach((leg) => {
             console.log(leg);
             
-            // Check if leg has meshes before accessing their properties
+            // Check if leg has meshes
             if (leg.meshFirst && leg.meshFirst.geometry) {
-                console.log('dispose first');
-                this.scene.remove(leg.meshFirst);
                 leg.meshFirst.geometry.dispose();
                 leg.meshFirst.material.dispose();
                 leg.meshFirst = null;
             }
 
             if (leg.meshSecond && leg.meshSecond.geometry) {
-                console.log('dispose second');
                 this.scene.remove(leg.meshSecond);
                 leg.meshSecond.geometry.dispose();
                 leg.meshSecond.material.dispose();

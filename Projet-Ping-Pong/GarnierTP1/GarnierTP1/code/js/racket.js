@@ -40,27 +40,24 @@ class TableTennisRacket {
 }
 
 
-render() {
-    const racket1Position = new THREE.Vector3(-this.table.length / 2 -this.posX, 0, 0);
-    const racket2Position = new THREE.Vector3(this.table.length / 2 + this.posX, 0, 0);
+    render() {
+        const racket1Position = new THREE.Vector3(-this.table.length / 2 -this.posX, 0, 0);
+        const racket2Position = new THREE.Vector3(this.table.length / 2 + this.posX, 0, 0);
 
-    this.createRacket(racket1Position,0x000000,0x000000,0xff0000);
-    this.createRacket(racket2Position,0x000000,0xffff00,0x000000);
-}
-
-getPosX() {
-    return this.posX;
-}
-getPosY()
-{
-    return this.posY
-}
-getThickness() {
-    return this.thickness;
-}
-
-
-    
+        this.createRacket(racket1Position,0x000000,0x000000,0xff0000);
+        this.createRacket(racket2Position,0x000000,0xffff00,0x000000);
     }
+
+    getPosX() {
+        return this.posX;
+    }
+    getPosY()
+    {
+        return this.posY
+    }
+    getThickness() {
+        return this.thickness;
+    }
+}
 window.Racket = TableTennisRacket;
 
