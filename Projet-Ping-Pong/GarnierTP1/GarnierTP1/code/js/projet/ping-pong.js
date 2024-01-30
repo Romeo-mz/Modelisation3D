@@ -98,11 +98,7 @@ function init() {
         createTableLegs(); // Recréez les pieds avec les nouveaux points de contrôle
     }
     const materials = {
-        leg: new THREE.MeshLambertMaterial({ color: 0x0000ff }),
-        table: new THREE.MeshBasicMaterial({ color: 0xffffff }),
-        net: new THREE.MeshBasicMaterial({ color: 0xffffff }),
-        post: new THREE.MeshLambertMaterial({ color: 0x808080 }),
-        handle: new THREE.MeshBasicMaterial({ color: 0x8b4513 })
+        leg: new THREE.MeshLambertMaterial({ color: 0x007a7a }),
     };
 
     function createTableLeg(position) {
@@ -164,6 +160,7 @@ function init() {
     legMaterialFolder.addColor(materials.leg, 'color').onChange(value => {
         materials.leg.color = new THREE.Color(value);
     });
+
 
     // Add GUI menu for camera position
     const cameraFolder = guiInstance.addFolder('Camera Position');
