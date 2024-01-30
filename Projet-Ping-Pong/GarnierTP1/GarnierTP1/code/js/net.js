@@ -9,17 +9,7 @@ class Net {
     }
 
     render() {
-        // Créer la boîte principale représentant le filet
-        // const geometry = new THREE.BoxGeometry(0.1, depth - 0.3, this.table.width - 0.1);
-        // const netMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
-        // const net = new THREE.Mesh(geometry, netMaterial);
-
-        // net.position.x = 0;
-        // net.position.y = depth / 2 + 0.1;
-        // net.position.z = 0;
-
-        // this.scene.add(net);
-
+        
         // Créer les fils horizontaux pour le filet
         const wireGeometry = new THREE.BoxGeometry(0.1, 0.1, this.table.width - 0.1);
         const wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });

@@ -25,17 +25,7 @@ class Table{
     }
     
     render(){
-        // const pointsFirstBezier = [
-        //     new THREE.Vector2(0.2, 0),
-        //     new THREE.Vector2(0.3, this.height / 4),
-        //     new THREE.Vector2(0.1, this.height / 2),
-        // ];
 
-        // const pointsSecondBezier = [
-        //     new THREE.Vector2(0.1, -this.height / 4), // y start for the height of the second lathe leg
-        //     new THREE.Vector2(0.3, this.height / 2),
-        //     new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
-        // ];
         const geometry = new THREE.BoxGeometry(this.length,  width, height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
@@ -73,9 +63,6 @@ class Table{
             this.scene.add(edge);
         })
 
-        // Create the legs
-        // console.log("create the leg")
-        // this.setLegs(this.length, 10, this.width)
     }
 
     setColor(color) {
