@@ -52,93 +52,106 @@ function init() {
     racketInstance1.render();
     racketInstance.render();
     tableInstance.render();
-    let legControlPoints = {
+    // Define control points for different parts of the leg
+    const legControlPoints = {
         upper: [{ x: 1, y: 0 }, { x: 1, y: 0.2 }, { x: 0.15, y: 0.4 }],
         middle: [{ x: 0.15, y: 0.4 }, { x: 0.1, y: 0.6 }, { x: 0.1, y: 0.8 }],
         lower: [{ x: 0.1, y: 0.8 }, { x: 0.05, y: 8 }, { x: 0, y: 1 }]
     };
-    
+
+    // Define positions for the legs
     const legPositions = [
-        
-        { x: -tableInstance.length / 2 + 1.5, y: 1, z: -tableInstance.width / 2 + 1.5},
-        { x: -tableInstance.length / 2 + 1.5, y: 1, z: tableInstance.width / 2 - 1.5},
-        { x: tableInstance.length / 2 - 1.5, y: 1, z: -tableInstance.width / 2 + 1.5},
-        { x: tableInstance.length / 2 - 1.5, y: 1, z: tableInstance.width / 2 - 1.5}
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: -tableInstance.width / 2 + 1.5 },
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: tableInstance.width / 2 - 1.5 },
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: -tableInstance.width / 2 + 1.5 },
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: tableInstance.width / 2 - 1.5 }
     ];
-    
+
+    // Initialize an array to store the table legs
     let tableLegs = [];
-    
-    function createLatheObject(points, material) {
-        const geometry = new THREE.LatheGeometry(points, 32);
-        return new THREE.Mesh(geometry, material);
-    }
-    
-    function createTableLegs() {
-      // Nettoyez les anciens pieds de table
-      tableLegs.forEach(leg => {
-          // Supprimez les pieds de la scène
-          scene.remove(leg);
-          // Si les objets contiennent des géométries/meshes, disposez-les également
-          leg.children.forEach(child => {
-              if (child.geometry) child.geometry.dispose();
-              if (child.material) child.material.dispose();
-          });
-      });
-      tableLegs = []; // Réinitialisez le tableau
-    
-      // Créez de nouveaux pieds de table
-      legPositions.forEach(position => {
-          const leg = createTableLeg(position);
-          tableLegs.push(leg); // Stockez la référence
-      });
-    }
-    
-    function updateTableLegs() {
-        createTableLegs(); // Recréez les pieds avec les nouveaux points de contrôle
-    }
+
+    // Define materials
     const materials = {
         leg: new THREE.MeshLambertMaterial({ color: 0x007a7a }),
     };
 
+    // Function to convert points to THREE.Vector2
+    function convertPoints(points) {
+        return points.map(p => new THREE.Vector2(p.x, p.y));
+    }
+
+    // Function to create a lathe object
+    function createLatheObject(points, material) {
+        const geometry = new THREE.LatheGeometry(points, 32);
+        return new THREE.Mesh(geometry, material);
+    }
+
+    // Function to create a table leg
     function createTableLeg(position) {
-        console.log("create table leg")
         const leg = new THREE.Object3D();
-    
-        // Convert control points to THREE.Vector2
-        const convertPoints = (points) => points.map(p => new THREE.Vector2(p.x, p.y));
-    
+
+        // Add parts to the leg
         leg.add(createLatheObject(convertPoints(legControlPoints.lower), materials.leg));
         leg.add(createLatheObject(convertPoints(legControlPoints.middle), materials.leg));
         leg.add(createLatheObject(convertPoints(legControlPoints.upper), materials.leg));
-    
+
+        // Set rotation and position
         leg.rotation.x = Math.PI;
         leg.position.set(position.x, position.y - 1, position.z);
+
+        // Add leg to the scene
         scene.add(leg);
-    
-        return leg; // Return the leg so we can store it in the tableLegs array
+
+        return leg;
     }
 
+    // Function to create all table legs
+    function createTableLegs() {
+        // Clean up old table legs
+        tableLegs.forEach(leg => {
+            scene.remove(leg);
+            leg.children.forEach(child => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        });
+
+        // Reset table legs array
+        tableLegs = [];
+
+        // Create new table legs
+        legPositions.forEach(position => {
+            const leg = createTableLeg(position);
+            tableLegs.push(leg);
+        });
+    }
+
+    // Function to update table legs
+    function updateTableLegs() {
+        createTableLegs();
+    }
+
+    // Create table legs
     createTableLegs(tableInstance);
 
-    const guiInstance = new window.Gui();
+        const guiInstance = new window.Gui();
 
-    // Add GUI menu for table color
-    const tableColorFolder = guiInstance.addFolder('Table Color');
-    const tableColors = {
-        Green: 0x007a7a,
-        Blue: 0x019ad9,
-    };
+        // Add GUI menu for table color
+        const tableColorFolder = guiInstance.addFolder('Table Color');
+        const tableColors = {
+            Green: 0x007a7a,
+            Blue: 0x019ad9,
+        };
 
-    tableInstance.color = 0x007a7a; // Set the default color to Green
+        tableInstance.color = 0x007a7a; // Set the default color to Green
 
-    const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
+        const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
 
-    tableColorController.onChange(() => {
-        tableInstance.setColor(tableColors[tableInstance.color]);
-        tableInstance.render();
-    });
+        tableColorController.onChange(() => {
+            tableInstance.setColor(tableColors[tableInstance.color]);
+            tableInstance.render();
+        });
 
-    // Création d'un sous-menu pour les points de contrôle inférieurs (lower)
     // Create the main "Leg" folder
     var legFolder = guiInstance.addFolder('Leg');
 
