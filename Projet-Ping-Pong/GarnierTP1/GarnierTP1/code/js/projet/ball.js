@@ -6,7 +6,7 @@ class Ball {
         this.ball = null;
         this.curve = null;
         this.animationStartTime = 0;
-        this.animationDuration = 8000; // 5 seconds duration for the animation
+        this.animationDuration = 1500; // 5 seconds duration for the animation
     }
 
     createBall(position) {
@@ -32,7 +32,7 @@ class Ball {
     const position = this.curve.getPointAt(clampedT);
     this.ball.position.copy(position);
 
-    if (t >= 1 && t <= 1.05) {
+    if (t >= 1 && t<1.05) {
         // Animation terminée, peut-être arrêtez ici ou effectuez une autre action
         console.log("Animation terminée");
     }

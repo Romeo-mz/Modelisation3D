@@ -13,6 +13,7 @@ let controls;
 let renderer; // Déclaration de renderer en tant que variable globale
 let scene; // Déclaration de scene en tant que variable globale
 let camera; // Déclaration de camera en tant que variable globale
+let initialTime;
 
 function init() {
     const canvas = document.getElementById('ping-pong');
@@ -206,15 +207,6 @@ function init() {
     tableLength = tableInstance.getLength();
     tableHeight = tableInstance.getHeight();
 
-
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
@@ -223,13 +215,44 @@ function init() {
 }
 
 
+
+    setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
+    setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
+
+    tableInstance.render();
+
+    tableWidth = tableInstance.getWidth();
+    tableLength = tableInstance.getLength();
+    tableHeight = tableInstance.getHeight();
     
+    // Create the net
+    const netInstance = new window.Net(scene, tableInstance);
+    netInstance.render();
+
+    // Create the racket
+    const racketInstance = new window.Racket(scene, tableInstance);
+    racketInstance.render();
+
+    racketPosX = racketInstance.getPosX();
+    racketPosY = racketInstance.getPosY();
+
+    racketThick = racketInstance.getThickness();
+
+    // Create the ball
+    ballInstance = new TableTennisBall(scene, tableInstance);
+    ballInstance.render();
+
+    ballRadius = ballInstance.getRadius();
+    initialTime = ballInstance.animationDuration;
+}
+
+
 
 
 function service()
     {
-        debut= Math.floor(Math.random() * tableWidth/2);
-        other = Math.floor(Math.random() * tableWidth/2);
+        debut= Math.random() * tableWidth/2;
+        other = Math.random() * tableWidth/2;
 
         start = ((-tableLength/2)-((tableLength*debut)/(2*(Math.abs(debut+other+0.01))))+tableLength/4)/(-tableLength/(2*(Math.abs(debut+other+0.01))));
         
@@ -257,7 +280,7 @@ function service()
             new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,debut));
             
         
-
+ 
         b = new THREE.CubicBezierCurve3(
             new THREE.Vector3(-tableLength/4, ballRadius+ tableHeight,debut),
             new THREE.Vector3(-tableLength/4, racketPosY/2,controlPoint2),
@@ -304,7 +327,7 @@ function service()
             signe = -1
         }
 
-        otherSide = Math.floor(Math.random() * tableWidth/2);
+        otherSide = Math.random() * tableWidth/2;
         debut = lastVector.getPointAt(1).z;
 
         pente = (3*tableLength)/(4*Math.abs((debut+signe*otherSide+0.01)));
@@ -373,7 +396,7 @@ function service()
             signe = -1
             
         }
-        otherSide = Math.floor(Math.random() * tableWidth/2);
+        otherSide = Math.random() * tableWidth/2;
         debut = lastVector.getPointAt(1).z;
         
 
@@ -541,35 +564,67 @@ function runIteration()
         else{
             score2 +=1;
         }
+
         
-        console.log("Jaune : "+score1,"Rouge : " +score2);
+        
         ballInstance.setCurve(combinedCurve);
+
+       
+
+        ballInstance.animationDuration = initialTime * random;
+            
+        const animationDuration = ballInstance.animationDuration;
+
+        console.log(animationDuration);
 
         // Start the ball animation
         ballInstance.startAnimation();
 
         // Your animation/rendering loop here
         function animate() {
+           
             requestAnimationFrame(animate);
             
             ballInstance.updateBallPosition(Date.now());
 
-            // Rotate the table
-            // table.rotation.y += 0.01;
-            // table.rotation.x += 0.01;
+           
+            
+            if (Date.now() - ballInstance.animationStartTime >= animationDuration) {
+                updateScoreTable(score1,score2)
+            }
+           
+            
+                
             controls.update();
             // Render the scene with the camera
             renderer.render(scene, camera);
         }
         console.log(random)
         animate(); // Start the animation loop
+
+        
+        console.log("Jaune : "+score1,"Rouge : " +score2);
+        
+      
+    }
+
+    // Après chaque lancer
+    function updateScoreTable(score1,score2) {
+        const teamYellowCell = document.getElementById('teamYellowScore');
+        const teamRedCell = document.getElementById('teamRedScore');
     
+        // Mettez à jour les scores dans les cellules
+        teamYellowCell.textContent = score1;
+        teamRedCell.textContent = score2;
     }
 
 
 
 
+
+
 document.addEventListener('DOMContentLoaded', function () {
+
 
     // Sélectionnez le bouton par son ID
     const startButton = document.getElementById('startButton');
