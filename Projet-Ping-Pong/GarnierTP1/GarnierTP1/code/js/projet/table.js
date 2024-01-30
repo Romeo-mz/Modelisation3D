@@ -23,8 +23,19 @@ class Table{
         this.dispose();
         this.render(); 
     }
+    
     render(){
+        // const pointsFirstBezier = [
+        //     new THREE.Vector2(0.2, 0),
+        //     new THREE.Vector2(0.3, this.height / 4),
+        //     new THREE.Vector2(0.1, this.height / 2),
+        // ];
 
+        // const pointsSecondBezier = [
+        //     new THREE.Vector2(0.1, -this.height / 4), // y start for the height of the second lathe leg
+        //     new THREE.Vector2(0.3, this.height / 2),
+        //     new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
+        // ];
         const geometry = new THREE.BoxGeometry(this.length,  width, height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
@@ -36,10 +47,7 @@ class Table{
         this.tableMesh = plane;
 
         const field = [];
-        const upperLeftColor = 0xf7b9c1;
-        const upperRightColor = 0xb9c1f7;
-        const lowerLeftColor = 0xf7f7b9;
-        const lowerRightColor = 0xc1f7b9;
+        
         
         const upperLeftMaterial = new THREE.MeshPhongMaterial({ color: this.color, side: THREE.DoubleSide }); // pink
         const upperRightMaterial = new THREE.MeshPhongMaterial({ color: this.color, side: THREE.DoubleSide }); // yellow
@@ -66,7 +74,8 @@ class Table{
         })
 
         // Create the legs
-        this.setLegs(this.length, 10, this.width)
+        // console.log("create the leg")
+        // this.setLegs(this.length, 10, this.width)
     }
 
     setColor(color) {
@@ -76,20 +85,26 @@ class Table{
             this.color = color; // Update the current color
         }
     }
+    setControlPoints(pointsFirst, pointsSecond) {
+        // this.dispose();
+        console.log("set control points")
+        console.log(pointsFirst.point)
+        this.setLegs(length, height, width, pointsFirst, pointsSecond);
+    }
 
-    setLegs(length, height, width){
-    
-        const legUpperLeft = new window.TableLeg(this.scene, this, height);
-        const legUpperRight = new window.TableLeg(this.scene, this, height);
-        const legLowerLeft = new window.TableLeg(this.scene, this, height);
-        const legLowerRight = new window.TableLeg(this.scene, this, height);
+    setLegs(length, height, width, pointsFirst, pointsSecond){
+        console.log(pointsFirst, pointsSecond)
+        const legUpperLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legUpperRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legLowerLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
+        const legLowerRight = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
         
-
         legUpperLeft.position.set(length / 2 - 0.5, -legUpperLeft.height / 2, -(width / 2) + 0.5);
         legUpperRight.position.set(length / 2 - 0.5, -legUpperRight.height / 2, width / 2 - 0.5);
         legLowerLeft.position.set(-(length / 2) + 0.5, -legLowerLeft.height / 2, -(width / 2) + 0.5);
         legLowerRight.position.set(-(length / 2) + 0.5, -legLowerRight.height / 2, width / 2 - 0.5);
         
+
         this.legMesh = [legUpperLeft, legUpperRight, legLowerLeft, legLowerRight];
         this.legMesh.forEach((leg) => {
             leg.render();
@@ -98,22 +113,32 @@ class Table{
     
 
 
-    dispose() {
-        if (this.tableMesh) {
-            this.scene.remove(this.tableMesh);
-            this.tableMesh.geometry.dispose();
-            this.tableMesh.material.dispose();
-            this.tableMesh = null;
-        }
+   dispose() {
+    if (this.legMesh) {
+        console.log('dispose legs');
+        this.legMesh.forEach((leg) => {
+            console.log(leg);
+            
+            // Check if leg has meshes before accessing their properties
+            if (leg.meshFirst && leg.meshFirst.geometry) {
+                console.log('dispose first');
+                this.scene.remove(leg.meshFirst);
+                leg.meshFirst.geometry.dispose();
+                leg.meshFirst.material.dispose();
+                leg.meshFirst = null;
+            }
 
-        if (this.legMesh) {
-            this.legMesh.forEach((leg) => {
-                this.scene.remove(leg.mesh);
-            });
-            this.legMesh = null;
-        }
+            if (leg.meshSecond && leg.meshSecond.geometry) {
+                console.log('dispose second');
+                this.scene.remove(leg.meshSecond);
+                leg.meshSecond.geometry.dispose();
+                leg.meshSecond.material.dispose();
+                leg.meshSecond = null;
+            }
+        });
+        this.legMesh = null;
     }
-    
+}
 
     getLength() {
         return this.length;

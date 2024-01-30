@@ -37,29 +37,143 @@ function init() {
     const tableInstance = new window.Table(scene);
     const netInstance = new window.Net(scene, tableInstance);
     const racketInstance1 = new window.Racket(scene, tableInstance);
+    const racketInstance = new window.Racket(scene, tableInstance);
+    ballInstance = new window.TableTennisBall(scene, tableInstance);
 
-    tableInstance.render();
+
+    racketPosX = racketInstance.getPosX();
+    racketPosY = racketInstance.getPosY();
+
+    racketThick = racketInstance.getThickness();
+    ballRadius = ballInstance.getRadius();
+
+
+    ballInstance.render();
     netInstance.render();
     racketInstance1.render();
-
-    const guiInstance = new window.Gui();
-    setupLatheControls(guiInstance, tableInstance);
-
-    // Add GUI menu for table color
-    const tableColorFolder = guiInstance.addFolder('Table Color');
-    const tableColors = {
-        Green: 0x007a7a,
-        Blue: 0x019ad9,
+    racketInstance.render();
+    tableInstance.render();
+    // Define control points for different parts of the leg
+    const legControlPoints = {
+        upper: [{ x: 1, y: 0 }, { x: 1, y: 0.2 }, { x: 0.15, y: 0.4 }],
+        middle: [{ x: 0.15, y: 0.4 }, { x: 0.1, y: 0.6 }, { x: 0.1, y: 0.8 }],
+        lower: [{ x: 0.1, y: 0.8 }, { x: 0.05, y: 8 }, { x: 0, y: 1 }]
     };
 
-    tableInstance.color = 'Green'; // Set the default color to Green
+    // Define positions for the legs
+    const legPositions = [
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: -tableInstance.width / 2 + 1.5 },
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: tableInstance.width / 2 - 1.5 },
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: -tableInstance.width / 2 + 1.5 },
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: tableInstance.width / 2 - 1.5 }
+    ];
 
-    const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
+    // Initialize an array to store the table legs
+    let tableLegs = [];
 
-    tableColorController.onChange(() => {
-        tableInstance.setColor(tableColors[tableInstance.color]);
-        tableInstance.render();
+    // Define materials
+    const materials = {
+        leg: new THREE.MeshLambertMaterial({ color: 0x007a7a }),
+    };
+
+    // Function to convert points to THREE.Vector2
+    function convertPoints(points) {
+        return points.map(p => new THREE.Vector2(p.x, p.y));
+    }
+
+    // Function to create a lathe object
+    function createLatheObject(points, material) {
+        const geometry = new THREE.LatheGeometry(points, 32);
+        return new THREE.Mesh(geometry, material);
+    }
+
+    // Function to create a table leg
+    function createTableLeg(position) {
+        const leg = new THREE.Object3D();
+
+        // Add parts to the leg
+        leg.add(createLatheObject(convertPoints(legControlPoints.lower), materials.leg));
+        leg.add(createLatheObject(convertPoints(legControlPoints.middle), materials.leg));
+        leg.add(createLatheObject(convertPoints(legControlPoints.upper), materials.leg));
+
+        // Set rotation and position
+        leg.rotation.x = Math.PI;
+        leg.position.set(position.x, position.y - 1, position.z);
+
+        // Add leg to the scene
+        scene.add(leg);
+
+        return leg;
+    }
+
+    // Function to create all table legs
+    function createTableLegs() {
+        // Clean up old table legs
+        tableLegs.forEach(leg => {
+            scene.remove(leg);
+            leg.children.forEach(child => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+        });
+
+        // Reset table legs array
+        tableLegs = [];
+
+        // Create new table legs
+        legPositions.forEach(position => {
+            const leg = createTableLeg(position);
+            tableLegs.push(leg);
+        });
+    }
+
+    // Function to update table legs
+    function updateTableLegs() {
+        createTableLegs();
+    }
+
+    // Create table legs
+    createTableLegs(tableInstance);
+
+        const guiInstance = new window.Gui();
+
+        // Add GUI menu for table color
+        const tableColorFolder = guiInstance.addFolder('Table Color');
+        const tableColors = {
+            Green: 0x007a7a,
+            Blue: 0x019ad9,
+        };
+
+        tableInstance.color = 0x007a7a; // Set the default color to Green
+
+        const tableColorController = tableColorFolder.add(tableInstance, 'color', Object.keys(tableColors)).name('Choose Color');
+
+        tableColorController.onChange(() => {
+            tableInstance.setColor(tableColors[tableInstance.color]);
+            tableInstance.render();
+        });
+
+    // Create the main "Leg" folder
+    var legFolder = guiInstance.addFolder('Leg');
+
+    // Create a function to add control points for a specific leg section
+    function addLegControlPoints(folderName, controlPoints) {
+        var folder = legFolder.addFolder(folderName + ' Lathe Points');
+        controlPoints.forEach((point, index) => {
+            folder.add(point, 'x', 0, 5).step(1).name(`Point ${index + 1} X`).onChange(updateTableLegs);
+        });
+    }
+
+    addLegControlPoints('Lower', legControlPoints.lower);
+    addLegControlPoints('Middle', legControlPoints.middle);
+    addLegControlPoints('Upper', legControlPoints.upper);
+
+    // Create the "Leg Material" subfolder
+    const legMaterialFolder = legFolder.addFolder('Leg Material');
+    legMaterialFolder.addColor(materials.leg, 'color').onChange(value => {
+        materials.leg.color = new THREE.Color(value);
     });
+
 
     // Add GUI menu for camera position
     const cameraFolder = guiInstance.addFolder('Camera Position');
@@ -89,64 +203,23 @@ function init() {
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
     camera.lookAt(0, 0, 0);
 
+    tableWidth = tableInstance.getWidth();
+    tableLength = tableInstance.getLength();
+    tableHeight = tableInstance.getHeight();
 
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
-}
-
-function setupLatheControls(guiInstance, tableInstance) {
-    const latheFolder = guiInstance.addFolder('Lathe Controls');
-
-    const setupLatheFolder = (folder, points, setControlPointsFunction) => {
-        points.forEach((point, index) => {
-            folder.add(point, 'x', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
-            folder.add(point, 'y', -10, 10).step(1).onChange(() => setControlPointsFunction(index, points));
-        });
-    };
-
-    const firstLatheFolder = latheFolder.addFolder('First Lathe');
-    const secondLatheFolder = latheFolder.addFolder('Second Lathe');
-
-    const setControlPointsFirst = (index, points) => {
-        tableInstance.legMesh[index].setControlPointsFirst(points);
-        tableInstance.render();
-    };
-
-    const setControlPointsSecond = (index, points) => {
-        tableInstance.legMesh[index].setControlPointsSecond(points);
-        tableInstance.render();
-    };
-
-    setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
-    setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
-
-    tableInstance.render();
 
     tableWidth = tableInstance.getWidth();
     tableLength = tableInstance.getLength();
     tableHeight = tableInstance.getHeight();
     
-    // Create the net
-    const netInstance = new window.Net(scene, tableInstance);
-    netInstance.render();
 
-    // Create the racket
-    const racketInstance = new window.Racket(scene, tableInstance);
-    racketInstance.render();
 
-    racketPosX = racketInstance.getPosX();
-    racketPosY = racketInstance.getPosY();
-
-    racketThick = racketInstance.getThickness();
-
-    // Create the ball
-    ballInstance = new TableTennisBall(scene, tableInstance);
-    ballInstance.render();
-
-    ballRadius = ballInstance.getRadius();
+   
     initialTime = ballInstance.animationDuration;
 }
 
@@ -528,7 +601,7 @@ function runIteration()
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    
+
 
     // Sélectionnez le bouton par son ID
     const startButton = document.getElementById('startButton');
@@ -542,4 +615,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Démarrez l'animation après le chargement de la page
     runIteration(); 
 });
-
