@@ -52,7 +52,6 @@ function init() {
     racketInstance1.render();
     racketInstance.render();
     tableInstance.render();
-
     let legControlPoints = {
         upper: [{ x: 1, y: 0 }, { x: 1, y: 0.2 }, { x: 0.15, y: 0.4 }],
         middle: [{ x: 0.15, y: 0.4 }, { x: 0.1, y: 0.6 }, { x: 0.1, y: 0.8 }],
