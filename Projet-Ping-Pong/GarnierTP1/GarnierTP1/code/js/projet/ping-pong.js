@@ -212,37 +212,14 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
-}
-
-
-
-    setupLatheFolder(firstLatheFolder, tableInstance.legMesh[0].pointsFirstLathe, setControlPointsFirst);
-    setupLatheFolder(secondLatheFolder, tableInstance.legMesh[0].pointsSecondLathe, setControlPointsSecond);
-
-    tableInstance.render();
 
     tableWidth = tableInstance.getWidth();
     tableLength = tableInstance.getLength();
     tableHeight = tableInstance.getHeight();
     
-    // Create the net
-    const netInstance = new window.Net(scene, tableInstance);
-    netInstance.render();
 
-    // Create the racket
-    const racketInstance = new window.Racket(scene, tableInstance);
-    racketInstance.render();
 
-    racketPosX = racketInstance.getPosX();
-    racketPosY = racketInstance.getPosY();
-
-    racketThick = racketInstance.getThickness();
-
-    // Create the ball
-    ballInstance = new TableTennisBall(scene, tableInstance);
-    ballInstance.render();
-
-    ballRadius = ballInstance.getRadius();
+   
     initialTime = ballInstance.animationDuration;
 }
 
