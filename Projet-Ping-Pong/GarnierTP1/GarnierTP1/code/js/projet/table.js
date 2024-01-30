@@ -25,7 +25,17 @@ class Table{
     }
     
     render(){
+        // const pointsFirstBezier = [
+        //     new THREE.Vector2(0.2, 0),
+        //     new THREE.Vector2(0.3, this.height / 4),
+        //     new THREE.Vector2(0.1, this.height / 2),
+        // ];
 
+        // const pointsSecondBezier = [
+        //     new THREE.Vector2(0.1, -this.height / 4), // y start for the height of the second lathe leg
+        //     new THREE.Vector2(0.3, this.height / 2),
+        //     new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
+        // ];
         const geometry = new THREE.BoxGeometry(this.length,  width, height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
@@ -64,7 +74,8 @@ class Table{
         })
 
         // Create the legs
-        this.setLegs(this.length, 10, this.width)
+        // console.log("create the leg")
+        // this.setLegs(this.length, 10, this.width)
     }
 
     setColor(color) {
@@ -75,9 +86,12 @@ class Table{
         }
     }
     setControlPoints(pointsFirst, pointsSecond) {
-        this.dispose();
+        // this.dispose();
+        console.log("set control points")
+        console.log(pointsFirst.point)
         this.setLegs(length, height, width, pointsFirst, pointsSecond);
     }
+
     setLegs(length, height, width, pointsFirst, pointsSecond){
         console.log(pointsFirst, pointsSecond)
         const legUpperLeft = new window.TableLeg(this.scene, this, height, pointsFirst, pointsSecond);
@@ -100,13 +114,6 @@ class Table{
 
 
    dispose() {
-    if (this.tableMesh) {
-        this.scene.remove(this.tableMesh);
-        this.tableMesh.geometry.dispose();
-        this.tableMesh.material.dispose();
-        this.tableMesh = null;
-    }
-
     if (this.legMesh) {
         console.log('dispose legs');
         this.legMesh.forEach((leg) => {

@@ -6,6 +6,8 @@ class TableLeg {
         this.height = height;
         this.meshFirst = null;
         this.meshSecond = null;
+        console.log("creation")
+
         this.pointsFirstBezier = [
             new THREE.Vector2(0.2, 0),
             new THREE.Vector2(0.3, this.height / 4),
@@ -17,9 +19,13 @@ class TableLeg {
             new THREE.Vector2(0.3, this.height / 2),
             new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
         ];
-        if (pointsFirst && pointsSecond) {
+
+        // console.log("this", this.pointsFirstBezier, this.pointsSecondBezier)
+        if (pointsFirst != null && pointsSecond != null) {
+            console.log("recreate")
             this.pointsFirstBezier = pointsFirst;
             this.pointsSecondBezier = pointsSecond;
+            
         }
     }
 
@@ -35,12 +41,14 @@ class TableLeg {
         this.meshFirst.position.set(this.position.x, this.position.y - 0.01, this.position.z);
         this.meshSecond.position.set(this.position.x, this.position.y - 0.01, this.position.z);
         
+        this.legGeometryFirstLathe = null;
+        this.legGeometrySecondLathe = null;
+
         this.scene.add(this.meshFirst);
         this.scene.add(this.meshSecond);
 
         // this.createFeet();
     }
-    
     generateLegGeometries() {
         const latheSegments = 20;
         const legGeometryFirstLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsFirstBezier, 20), latheSegments);
@@ -48,7 +56,7 @@ class TableLeg {
     
         return [legGeometryFirstLathe, legGeometrySecondLathe];
     }
-
+    
     generateLegGeometry() {
         const latheSegments = 20;
         const legGeometryFirstLathe = new THREE.LatheGeometry(this.lathePoints(this.pointsFirstBezier, 20), latheSegments);
@@ -83,13 +91,13 @@ class TableLeg {
         return result;
     }
 
-    setControlPoints(points) {
-        this.pointsFirstBezier = points[0];
-        this.pointsSecondBezier = points[1];
+    setControlPoints(pointsFirst, pointsSecond) {
+        this.pointsFirstBezier = pointsFirst;
+        this.pointsSecondBezier = pointsSecond;
         this.dispose();
         this.render();
     }
-
+    
 
     createFeet() {
         const footLength = 2;
@@ -112,9 +120,14 @@ class TableLeg {
             // this.scene.remove(this.meshFirst);
             // this.scene.remove(this.meshSecond);
         }
+
         this.scene.remove(this.meshFirst);
         this.scene.remove(this.meshSecond);
+        
+        this.meshFirst.geometry.dispose();
+        this.meshSecond.geometry.dispose();
 
+        this.meshFirst.geometry = null;
     }
 }
 

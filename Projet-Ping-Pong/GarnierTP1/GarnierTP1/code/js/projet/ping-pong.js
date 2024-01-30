@@ -48,10 +48,82 @@ function init() {
 
 
     ballInstance.render();
-    tableInstance.render();
     netInstance.render();
     racketInstance1.render();
     racketInstance.render();
+    tableInstance.render();
+
+    let legControlPoints = {
+        upper: [{ x: 1, y: 0 }, { x: 1, y: 0.2 }, { x: 0.15, y: 0.4 }],
+        middle: [{ x: 0.15, y: 0.4 }, { x: 0.1, y: 0.6 }, { x: 0.1, y: 0.8 }],
+        lower: [{ x: 0.1, y: 0.8 }, { x: 0.05, y: 8 }, { x: 0, y: 1 }]
+    };
+    
+    const legPositions = [
+        
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: -tableInstance.width / 2 + 1.5},
+        { x: -tableInstance.length / 2 + 1.5, y: 1, z: tableInstance.width / 2 - 1.5},
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: -tableInstance.width / 2 + 1.5},
+        { x: tableInstance.length / 2 - 1.5, y: 1, z: tableInstance.width / 2 - 1.5}
+    ];
+    
+    let tableLegs = [];
+    
+    function createLatheObject(points, material) {
+        const geometry = new THREE.LatheGeometry(points, 32);
+        return new THREE.Mesh(geometry, material);
+    }
+    
+    function createTableLegs() {
+      // Nettoyez les anciens pieds de table
+      tableLegs.forEach(leg => {
+          // Supprimez les pieds de la scène
+          scene.remove(leg);
+          // Si les objets contiennent des géométries/meshes, disposez-les également
+          leg.children.forEach(child => {
+              if (child.geometry) child.geometry.dispose();
+              if (child.material) child.material.dispose();
+          });
+      });
+      tableLegs = []; // Réinitialisez le tableau
+    
+      // Créez de nouveaux pieds de table
+      legPositions.forEach(position => {
+          const leg = createTableLeg(position);
+          tableLegs.push(leg); // Stockez la référence
+      });
+    }
+    
+    function updateTableLegs() {
+        createTableLegs(); // Recréez les pieds avec les nouveaux points de contrôle
+    }
+    const materials = {
+        leg: new THREE.MeshLambertMaterial({ color: 0x0000ff }),
+        table: new THREE.MeshBasicMaterial({ color: 0xffffff }),
+        net: new THREE.MeshBasicMaterial({ color: 0xffffff }),
+        post: new THREE.MeshLambertMaterial({ color: 0x808080 }),
+        handle: new THREE.MeshBasicMaterial({ color: 0x8b4513 })
+    };
+
+    function createTableLeg(position) {
+        console.log("create table leg")
+        const leg = new THREE.Object3D();
+    
+        // Convert control points to THREE.Vector2
+        const convertPoints = (points) => points.map(p => new THREE.Vector2(p.x, p.y));
+    
+        leg.add(createLatheObject(convertPoints(legControlPoints.lower), materials.leg));
+        leg.add(createLatheObject(convertPoints(legControlPoints.middle), materials.leg));
+        leg.add(createLatheObject(convertPoints(legControlPoints.upper), materials.leg));
+    
+        leg.rotation.x = Math.PI;
+        leg.position.set(position.x, position.y - 1, position.z);
+        scene.add(leg);
+    
+        return leg; // Return the leg so we can store it in the tableLegs array
+    }
+
+    createTableLegs(tableInstance);
 
     const guiInstance = new window.Gui();
 
@@ -70,60 +142,28 @@ function init() {
         tableInstance.setColor(tableColors[tableInstance.color]);
         tableInstance.render();
     });
-    // Add GUI menu for Bezier control points
-    const bezierFolder = guiInstance.addFolder('Bezier Control Points');
-    const bezierControlPointsFirst = {
-        point1: { x: 0.2, y: 0 },
-        point2: { x: 0.3, y: 1 },
-        point3: { x: 0.1, y: 2 },
-    };
 
-    const bezierControlPointsSecond = {
-        point1: { x: 0.2, y: 0 },
-        point2: { x: 0.3, y: 1 },
-        point3: { x: 0.1, y: 2 },
-    };
+    // Création d'un sous-menu pour les points de contrôle inférieurs (lower)
+    // Create the main "Leg" folder
+    var legFolder = guiInstance.addFolder('Leg');
 
-    // Create controllers for each control point
-    const point1XController = bezierFolder.add(bezierControlPointsFirst.point1, 'x', 0, 5).step(1).name('Point 1 X');
-    const point2XController = bezierFolder.add(bezierControlPointsFirst.point2, 'x', 0, 5).step(1).name('Point 2 X');
-    const point3XController = bezierFolder.add(bezierControlPointsFirst.point3, 'x', 0, 5).step(1).name('Point 3 X');
-    const point1YController = bezierFolder.add(bezierControlPointsFirst.point1, 'y', 0, 5).step(1).name('Point 1 Y');
-    const point2YController = bezierFolder.add(bezierControlPointsFirst.point2, 'y', 0, 5).step(1).name('Point 2 Y');
-    const point3YController = bezierFolder.add(bezierControlPointsFirst.point3, 'y', 0, 5).step(1).name('Point 3 Y');
+    // Create a function to add control points for a specific leg section
+    function addLegControlPoints(folderName, controlPoints) {
+        var folder = legFolder.addFolder(folderName + ' Lathe Points');
+        controlPoints.forEach((point, index) => {
+            folder.add(point, 'x', 0, 5).step(1).name(`Point ${index + 1} X`).onChange(updateTableLegs);
+        });
+    }
 
-    const point4Controller = bezierFolder.add(bezierControlPointsSecond.point1, 'y', 0, 2).step(0.1).name('Point 1 Y');
-    const point5Controller = bezierFolder.add(bezierControlPointsSecond.point2, 'y', 0, 2).step(0.1).name('Point 2 Y');
-    const point6Controller = bezierFolder.add(bezierControlPointsSecond.point3, 'y', 0, 2).step(0.1).name('Point 3 Y');
-    
-    const updateBezierCurve = () => {
-        const pointsFirst = [
-            new THREE.Vector2(bezierControlPointsFirst.point1.x, bezierControlPointsFirst.point1.y),
-            new THREE.Vector2(bezierControlPointsFirst.point2.x, bezierControlPointsFirst.point2.y),
-            new THREE.Vector2(bezierControlPointsFirst.point3.x, bezierControlPointsFirst.point3.y),
-        ];
-    
-        const pointsSecond = [
-            new THREE.Vector2(bezierControlPointsSecond.point1.x, bezierControlPointsSecond.point1.y),
-            new THREE.Vector2(bezierControlPointsSecond.point2.x, bezierControlPointsSecond.point2.y),
-            new THREE.Vector2(bezierControlPointsSecond.point3.x, bezierControlPointsSecond.point3.y),
-        ];
-    
-        tableInstance.setControlPoints(pointsFirst, pointsSecond);
-        tableInstance.render();
-    };
+    addLegControlPoints('Lower', legControlPoints.lower);
+    addLegControlPoints('Middle', legControlPoints.middle);
+    addLegControlPoints('Upper', legControlPoints.upper);
 
-    // Listen for changes in control points and update the Bezier curve
-    point1XController.onChange(updateBezierCurve);
-    point2XController.onChange(updateBezierCurve);
-    point3XController.onChange(updateBezierCurve);
-    point1YController.onChange(updateBezierCurve);
-    point2YController.onChange(updateBezierCurve);
-    point3YController.onChange(updateBezierCurve);
-
-    point4Controller.onChange(updateBezierCurve);
-    point5Controller.onChange(updateBezierCurve);
-    point6Controller.onChange(updateBezierCurve);
+    // Create the "Leg Material" subfolder
+    const legMaterialFolder = legFolder.addFolder('Leg Material');
+    legMaterialFolder.addColor(materials.leg, 'color').onChange(value => {
+        materials.leg.color = new THREE.Color(value);
+    });
 
     // Add GUI menu for camera position
     const cameraFolder = guiInstance.addFolder('Camera Position');
