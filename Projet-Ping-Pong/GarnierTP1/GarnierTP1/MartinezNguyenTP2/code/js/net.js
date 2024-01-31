@@ -1,5 +1,5 @@
 const depth = 1;
-const numberOfWires = 5; // Nombre de fils dans le filet
+const numberOfWires = 5; 
 
 class Net {
     constructor(scene, table) {
@@ -9,25 +9,14 @@ class Net {
     }
 
     render() {
-        // Créer la boîte principale représentant le filet
-        // const geometry = new THREE.BoxGeometry(0.1, depth - 0.3, this.table.width - 0.1);
-        // const netMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
-        // const net = new THREE.Mesh(geometry, netMaterial);
-
-        // net.position.x = 0;
-        // net.position.y = depth / 2 + 0.1;
-        // net.position.z = 0;
-
-        // this.scene.add(net);
-
-        // Créer les fils horizontaux pour le filet
+        
         const wireGeometry = new THREE.BoxGeometry(0.1, 0.1, this.table.width - 0.1);
         const wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
         for (let i = 0; i < numberOfWires; i++) {
             const wire = new THREE.Mesh(wireGeometry, wireMaterial);
 
-            // Positionner chaque fil en fonction de la hauteur du filet
+            // fil en fonction de la hauteur du filet
             wire.position.x = 0;
             wire.position.y = (depth - 0.3) / (numberOfWires - 1) * i + 0.1;
             wire.position.z = 0;
@@ -35,15 +24,12 @@ class Net {
             this.scene.add(wire);
         }
 
-        // Créer les fils verticaux pour le filet
+        // fils verticaux
         const wireVerticalGeometry = new THREE.BoxGeometry(0.1, depth - 0.3, 0.1);
         const wireVerticalMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
         for (let i = 0; i < numberOfWires * 8; i++) {
             const wireVertical = new THREE.Mesh(wireVerticalGeometry, wireVerticalMaterial);
-
-            // Positionner chaque fil en fonction de la longueur du filet
-
             wireVertical.position.x = 0;
             wireVertical.position.y = depth / 2;
             wireVertical.position.z = (this.table.width - 0.1) / (numberOfWires * 8 - 1) * i - (this.table.width / 2);

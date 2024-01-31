@@ -25,17 +25,7 @@ class Table{
     }
     
     render(){
-        // const pointsFirstBezier = [
-        //     new THREE.Vector2(0.2, 0),
-        //     new THREE.Vector2(0.3, this.height / 4),
-        //     new THREE.Vector2(0.1, this.height / 2),
-        // ];
 
-        // const pointsSecondBezier = [
-        //     new THREE.Vector2(0.1, -this.height / 4), // y start for the height of the second lathe leg
-        //     new THREE.Vector2(0.3, this.height / 2),
-        //     new THREE.Vector2(0.1, - this.height  ), // y for the height of the leg
-        // ];
         const geometry = new THREE.BoxGeometry(this.length,  width, height);
         const material = new THREE.MeshPhongMaterial({ color: "rgb(255, 255, 255)", side: THREE.DoubleSide });
         const plane = new THREE.Mesh(geometry, material);
@@ -73,9 +63,6 @@ class Table{
             this.scene.add(edge);
         })
 
-        // Create the legs
-        // console.log("create the leg")
-        // this.setLegs(this.length, 10, this.width)
     }
 
     setColor(color) {
@@ -86,9 +73,6 @@ class Table{
         }
     }
     setControlPoints(pointsFirst, pointsSecond) {
-        // this.dispose();
-        console.log("set control points")
-        console.log(pointsFirst.point)
         this.setLegs(length, height, width, pointsFirst, pointsSecond);
     }
 
@@ -115,21 +99,17 @@ class Table{
 
    dispose() {
     if (this.legMesh) {
-        console.log('dispose legs');
         this.legMesh.forEach((leg) => {
             console.log(leg);
             
-            // Check if leg has meshes before accessing their properties
+            // Check if leg has meshes
             if (leg.meshFirst && leg.meshFirst.geometry) {
-                console.log('dispose first');
-                this.scene.remove(leg.meshFirst);
                 leg.meshFirst.geometry.dispose();
                 leg.meshFirst.material.dispose();
                 leg.meshFirst = null;
             }
 
             if (leg.meshSecond && leg.meshSecond.geometry) {
-                console.log('dispose second');
                 this.scene.remove(leg.meshSecond);
                 leg.meshSecond.geometry.dispose();
                 leg.meshSecond.material.dispose();

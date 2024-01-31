@@ -10,17 +10,17 @@ let ballRadius;
 let racketThick;
 let ballInstance;
 let controls;
-let renderer; // Déclaration de renderer en tant que variable globale
-let scene; // Déclaration de scene en tant que variable globale
-let camera; // Déclaration de camera en tant que variable globale
+let renderer; 
+let scene; 
+let camera;
 let initialTime;
 
 function init() {
     const canvas = document.getElementById('ping-pong');
 
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); // Affectation de renderer en tant que variable globale
-    scene = new THREE.Scene(); // Affectation de scene en tant que variable globale
-    camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 3000); // Affectation de camera en tant que variable globale
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true }); 
+    scene = new THREE.Scene(); 
+    camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 3000); 
     
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -552,7 +552,7 @@ function runIteration()
             
         const animationDuration = ballInstance.animationDuration;
 
-        console.log(animationDuration);
+        // console.log(animationDuration);
 
         // Start the ball animation
         ballInstance.startAnimation();
@@ -576,21 +576,19 @@ function runIteration()
             // Render the scene with the camera
             renderer.render(scene, camera);
         }
-        console.log(random)
+        // console.log(random)
         animate(); // Start the animation loop
 
         
-        console.log("Jaune : "+score1,"Rouge : " +score2);
+        // console.log("Jaune : "+score1,"Rouge : " +score2);
         
       
     }
 
-    // Après chaque lancer
     function updateScoreTable(score1,score2) {
         const teamYellowCell = document.getElementById('teamYellowScore');
         const teamRedCell = document.getElementById('teamRedScore');
     
-        // Mettez à jour les scores dans les cellules
         teamYellowCell.textContent = score1;
         teamRedCell.textContent = score2;
     }
@@ -603,15 +601,11 @@ function runIteration()
 document.addEventListener('DOMContentLoaded', function () {
 
 
-    // Sélectionnez le bouton par son ID
     const startButton = document.getElementById('startButton');
 
-    // Ajoutez un gestionnaire d'événements pour le clic sur le bouton
     startButton.addEventListener('click', function () {
-        // Appelez votre fonction runIteration ici
         runIteration();
     });
 
-    // Démarrez l'animation après le chargement de la page
     runIteration(); 
 });
