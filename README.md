@@ -1,6 +1,6 @@
 # 3D Ping Pong Simulation
 
-![Gameplay GIF](https://im.ezgif.com/tmp/ezgif-1-d517c20227.gif)
+![Gameplay GIF](https://github.com/Romeo-mz/Modelisation3D/blob/main/ping-pong.gif)
 
 ## Overview
 
